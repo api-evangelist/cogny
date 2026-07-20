@@ -1,0 +1,47 @@
+generated: '2026-07-18'
+method: searched
+source: openapi/cogny-openapi.yml
+docs: https://cogny.com/docs/api-overview-authentication
+key_prefixes:
+  live: sk_live_
+  test: sk_test_
+  mcp_anonymous: cogny_lite_
+agent_registration:
+  protocol: auth.md
+  register_uri: https://app.cogny.com/api/agent/auth
+  skill: https://cogny.com/auth.md
+  note: Anonymous registration returns a cogny_lite_* Bearer key in one round trip (no browser).
+summary:
+  types:
+  - apiKey
+  - http
+  - oauth2
+  api_key_in:
+  - header
+  oauth2_flows:
+  - authorizationCode
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  description: Bearer API key. Production keys are prefixed sk_live_, test keys sk_test_. MCP-issued
+    anonymous keys are prefixed cogny_lite_.
+  sources:
+  - openapi/cogny-openapi.yml
+- name: apiKeyHeader
+  type: apiKey
+  in: header
+  parameter: X-API-Key
+  description: Legacy API-key header (equivalent to Bearer).
+  sources:
+  - openapi/cogny-openapi.yml
+- name: oauth2
+  type: oauth2
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://cogny.com/api/mcp/oauth/authorize
+    tokenUrl: https://cogny.com/api/mcp/oauth/token
+    scopes: 4
+  description: OAuth 2.1 (DCR + PKCE) for MCP clients.
+  sources:
+  - openapi/cogny-openapi.yml
