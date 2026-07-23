@@ -1,0 +1,105 @@
+openapi: 3.1.0
+info:
+  title: Cogny Reports Webhooks API
+  version: '1'
+  description: Cogny is an AI marketing platform. The REST API exposes the Report Builder (AI-generated growth reports with SSE streaming), Growth Tickets, and warehouse resources. Authentication is a Bearer API key (sk_live_* / sk_test_*).
+  contact:
+    name: Cogny
+    url: https://cogny.com
+  termsOfService: https://cogny.com/terms
+servers:
+- url: https://api.cogny.com/v1
+  description: Production
+security:
+- bearerAuth: []
+tags:
+- name: Webhooks
+  description: Webhook subscription configuration.
+paths:
+  /webhooks:
+    post:
+      operationId: createWebhook
+      summary: Configure a webhook subscription
+      tags:
+      - Webhooks
+      security:
+      - bearerAuth:
+        - write
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  format: uri
+                events:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: Webhook subscription created.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  responses:
+    BadRequest:
+      description: Invalid request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          enum:
+          - false
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Bearer API key. Production keys are prefixed sk_live_, test keys sk_test_. MCP-issued anonymous keys are prefixed cogny_lite_.
+    apiKeyHeader:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Legacy API-key header (equivalent to Bearer).
+    oauth2:
+      type: oauth2
+      description: OAuth 2.1 (DCR + PKCE) for MCP clients.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://cogny.com/api/mcp/oauth/authorize
+          tokenUrl: https://cogny.com/api/mcp/oauth/token
+          scopes:
+            read: Read access
+            write: Write access
+            tickets:read: Read tickets
+            tickets:write: Write tickets

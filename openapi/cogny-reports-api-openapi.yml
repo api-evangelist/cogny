@@ -1,0 +1,486 @@
+openapi: 3.1.0
+info:
+  title: Cogny Reports API
+  version: '1'
+  description: Cogny is an AI marketing platform. The REST API exposes the Report Builder (AI-generated growth reports with SSE streaming), Growth Tickets, and warehouse resources. Authentication is a Bearer API key (sk_live_* / sk_test_*).
+  contact:
+    name: Cogny
+    url: https://cogny.com
+  termsOfService: https://cogny.com/terms
+servers:
+- url: https://api.cogny.com/v1
+  description: Production
+security:
+- bearerAuth: []
+tags:
+- name: Reports
+  description: AI-powered growth report generation with streaming responses.
+paths:
+  /reports:
+    get:
+      operationId: listReports
+      summary: List reports
+      tags:
+      - Reports
+      security:
+      - bearerAuth:
+        - reports:read
+      parameters:
+      - name: warehouse_id
+        in: query
+        schema:
+          type: string
+      - name: status
+        in: query
+        schema:
+          type: string
+          enum:
+          - queued
+          - processing
+          - completed
+          - failed
+          - cancelled
+      - name: created_after
+        in: query
+        schema:
+          type: string
+          format: date-time
+      - name: created_before
+        in: query
+        schema:
+          type: string
+          format: date-time
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          maximum: 100
+      - name: cursor
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A page of reports.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Report'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    post:
+      operationId: createReport
+      summary: Create a report
+      description: Start an AI-generated growth report from a natural-language prompt over a connected warehouse.
+      tags:
+      - Reports
+      security:
+      - bearerAuth:
+        - reports:write
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReportRequest'
+      responses:
+        '201':
+          description: Report accepted for processing.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Report'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /reports/{report_id}:
+    parameters:
+    - name: report_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: getReport
+      summary: Get report status
+      tags:
+      - Reports
+      security:
+      - bearerAuth:
+        - reports:read
+      responses:
+        '200':
+          description: Report status.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Report'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: cancelReport
+      summary: Cancel a report
+      tags:
+      - Reports
+      security:
+      - bearerAuth:
+        - reports:write
+      responses:
+        '200':
+          description: Report cancelled.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      status:
+                        type: string
+                        enum:
+                        - cancelled
+                      cancelled_at:
+                        type: string
+                        format: date-time
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /reports/{report_id}/stream:
+    parameters:
+    - name: report_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: streamReport
+      summary: Stream report generation (SSE)
+      description: 'Server-Sent Events stream of report generation. Event types: status, query, result, insight, visualization, completed, error.'
+      tags:
+      - Reports
+      security:
+      - bearerAuth:
+        - reports:read
+      responses:
+        '200':
+          description: An SSE stream.
+          content:
+            text/event-stream:
+              schema:
+                type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /reports/{report_id}/content:
+    parameters:
+    - name: report_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: getReportContent
+      summary: Get report content
+      tags:
+      - Reports
+      security:
+      - bearerAuth:
+        - reports:read
+      responses:
+        '200':
+          description: Full report content with sections, insights, visualizations, recommendations.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/ReportContent'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    Insight:
+      type: object
+      properties:
+        type:
+          type: string
+        content:
+          type: string
+        confidence:
+          type: number
+        data:
+          type: object
+    CreateReportRequest:
+      type: object
+      required:
+      - warehouse_id
+      - prompt
+      properties:
+        warehouse_id:
+          type: string
+        prompt:
+          type: string
+          maxLength: 2000
+        context:
+          type: object
+          properties:
+            date_range:
+              type: object
+              properties:
+                start:
+                  type: string
+                  format: date
+                end:
+                  type: string
+                  format: date
+            dimensions:
+              type: array
+              items:
+                type: string
+            focus_areas:
+              type: array
+              items:
+                type: string
+        options:
+          type: object
+          properties:
+            include_visualizations:
+              type: boolean
+              default: true
+            include_sql_queries:
+              type: boolean
+              default: false
+            include_recommendations:
+              type: boolean
+              default: true
+            max_iterations:
+              type: integer
+              default: 50
+              maximum: 100
+            language:
+              type: string
+              default: en
+        metadata:
+          type: object
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          enum:
+          - false
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+    Report:
+      type: object
+      properties:
+        id:
+          type: string
+        warehouse_id:
+          type: string
+        status:
+          type: string
+          enum:
+          - queued
+          - processing
+          - completed
+          - failed
+          - cancelled
+        prompt:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+        estimated_completion:
+          type: string
+          format: date-time
+        url:
+          type: string
+        stream_url:
+          type: string
+        summary:
+          type: object
+          properties:
+            total_queries:
+              type: integer
+            total_insights:
+              type: integer
+            key_findings:
+              type: array
+              items:
+                type: string
+        metadata:
+          type: object
+    ReportContent:
+      type: object
+      properties:
+        report_id:
+          type: string
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              content:
+                type: string
+              insights:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Insight'
+              visualizations:
+                type: array
+                items:
+                  type: object
+              queries:
+                type: array
+                items:
+                  type: object
+        recommendations:
+          type: array
+          items:
+            type: object
+            properties:
+              priority:
+                type: string
+                enum:
+                - high
+                - medium
+                - low
+              title:
+                type: string
+              description:
+                type: string
+              estimated_impact:
+                type: string
+              effort:
+                type: string
+              action_items:
+                type: array
+                items:
+                  type: string
+        metadata:
+          type: object
+          properties:
+            total_queries:
+              type: integer
+            total_insights:
+              type: integer
+            generation_time_seconds:
+              type: number
+    Pagination:
+      type: object
+      properties:
+        has_more:
+          type: boolean
+        next_cursor:
+          type: string
+        total_count:
+          type: integer
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Invalid request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: API key lacks required scope.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RateLimited:
+      description: Rate limit exceeded.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Bearer API key. Production keys are prefixed sk_live_, test keys sk_test_. MCP-issued anonymous keys are prefixed cogny_lite_.
+    apiKeyHeader:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Legacy API-key header (equivalent to Bearer).
+    oauth2:
+      type: oauth2
+      description: OAuth 2.1 (DCR + PKCE) for MCP clients.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://cogny.com/api/mcp/oauth/authorize
+          tokenUrl: https://cogny.com/api/mcp/oauth/token
+          scopes:
+            read: Read access
+            write: Write access
+            tickets:read: Read tickets
+            tickets:write: Write tickets

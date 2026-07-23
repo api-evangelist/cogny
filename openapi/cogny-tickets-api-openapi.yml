@@ -1,0 +1,433 @@
+openapi: 3.1.0
+info:
+  title: Cogny Reports Tickets API
+  version: '1'
+  description: Cogny is an AI marketing platform. The REST API exposes the Report Builder (AI-generated growth reports with SSE streaming), Growth Tickets, and warehouse resources. Authentication is a Bearer API key (sk_live_* / sk_test_*).
+  contact:
+    name: Cogny
+    url: https://cogny.com
+  termsOfService: https://cogny.com/terms
+servers:
+- url: https://api.cogny.com/v1
+  description: Production
+security:
+- bearerAuth: []
+tags:
+- name: Tickets
+  description: AI-generated growth tickets (recommendations) management.
+paths:
+  /tickets:
+    get:
+      operationId: listTickets
+      summary: List growth tickets
+      tags:
+      - Tickets
+      security:
+      - bearerAuth:
+        - tickets:read
+      parameters:
+      - name: warehouse_id
+        in: query
+        schema:
+          type: string
+      - name: status
+        in: query
+        schema:
+          type: string
+      - name: priority
+        in: query
+        schema:
+          type: string
+      - name: category
+        in: query
+        schema:
+          type: string
+      - name: created_after
+        in: query
+        schema:
+          type: string
+          format: date-time
+      - name: created_before
+        in: query
+        schema:
+          type: string
+          format: date-time
+      - name: updated_after
+        in: query
+        schema:
+          type: string
+          format: date-time
+      - name: sort
+        in: query
+        schema:
+          type: string
+      - name: limit
+        in: query
+        schema:
+          type: integer
+      - name: cursor
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A page of tickets.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Ticket'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /tickets/{ticket_id}:
+    parameters:
+    - name: ticket_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: getTicket
+      summary: Get a ticket
+      tags:
+      - Tickets
+      security:
+      - bearerAuth:
+        - tickets:read
+      responses:
+        '200':
+          description: Ticket detail.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Ticket'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      operationId: updateTicket
+      summary: Update a ticket
+      description: Update ticket status, priority, assignee, notes, action_items.
+      tags:
+      - Tickets
+      security:
+      - bearerAuth:
+        - tickets:write
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                priority:
+                  type: string
+                assignee:
+                  type: string
+                notes:
+                  type: string
+                action_items:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Updated ticket.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Ticket'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /tickets/bulk-update:
+    post:
+      operationId: bulkUpdateTickets
+      summary: Bulk update tickets
+      tags:
+      - Tickets
+      security:
+      - bearerAuth:
+        - tickets:write
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ticket_ids:
+                  type: array
+                  items:
+                    type: string
+                updates:
+                  type: object
+      responses:
+        '200':
+          description: Bulk update result.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  updated_count:
+                    type: integer
+                  failed_count:
+                    type: integer
+                  updated_ids:
+                    type: array
+                    items:
+                      type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /tickets/{ticket_id}/dismiss:
+    parameters:
+    - name: ticket_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      operationId: dismissTicket
+      summary: Dismiss a ticket
+      tags:
+      - Tickets
+      security:
+      - bearerAuth:
+        - tickets:write
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                  enum:
+                  - not_applicable
+                  - already_implemented
+                  - insufficient_impact
+                  - resource_constraints
+                  - other
+                notes:
+                  type: string
+      responses:
+        '200':
+          description: Dismissed ticket.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Ticket'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /tickets/stats:
+    get:
+      operationId: getTicketStats
+      summary: Get ticket statistics
+      tags:
+      - Tickets
+      security:
+      - bearerAuth:
+        - tickets:read
+      responses:
+        '200':
+          description: Aggregated ticket statistics.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /tickets/export:
+    post:
+      operationId: exportTickets
+      summary: Export tickets
+      tags:
+      - Tickets
+      security:
+      - bearerAuth:
+        - tickets:read
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                format:
+                  type: string
+                  enum:
+                  - csv
+                  - json
+                  - xlsx
+                  - jira
+                  - asana
+                  - linear
+                filters:
+                  type: object
+                include_fields:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Export descriptor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  export_id:
+                    type: string
+                  download_url:
+                    type: string
+                  expires_at:
+                    type: string
+                    format: date-time
+                  ticket_count:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    Ticket:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        priority:
+          type: string
+        status:
+          type: string
+        estimated_impact:
+          type: string
+        effort:
+          type: string
+        action_items:
+          type: array
+          items:
+            type: string
+        supporting_data:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        url:
+          type: string
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          enum:
+          - false
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+    Pagination:
+      type: object
+      properties:
+        has_more:
+          type: boolean
+        next_cursor:
+          type: string
+        total_count:
+          type: integer
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Invalid request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RateLimited:
+      description: Rate limit exceeded.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Bearer API key. Production keys are prefixed sk_live_, test keys sk_test_. MCP-issued anonymous keys are prefixed cogny_lite_.
+    apiKeyHeader:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Legacy API-key header (equivalent to Bearer).
+    oauth2:
+      type: oauth2
+      description: OAuth 2.1 (DCR + PKCE) for MCP clients.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://cogny.com/api/mcp/oauth/authorize
+          tokenUrl: https://cogny.com/api/mcp/oauth/token
+          scopes:
+            read: Read access
+            write: Write access
+            tickets:read: Read tickets
+            tickets:write: Write tickets
