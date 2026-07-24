@@ -1,0 +1,38 @@
+generated: '2026-07-18'
+method: searched
+hosts:
+  - host: https://cogny.com
+    documents:
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        file: cogny-oauth-authorization-server.json
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+  - host: https://app.cogny.com
+    documents:
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        file: cogny-app-oauth-authorization-server.json
+      - path: /.well-known/oauth-protected-resource
+        status: 200
+        file: cogny-app-oauth-protected-resource.json
+agent_surfaces:
+  # Machine-readable agent-native files published at the site root (not under /.well-known/).
+  - path: /llms.txt
+    status: 200
+    file: ../llms/cogny-llms.txt
+  - path: /SKILL.md
+    status: 200
+    file: ../skills/cogny-SKILL.md
+  - path: /auth.md
+    status: 200
+    file: ../authentication/cogny-auth.md
+  - path: /cli/llms.txt
+    status: 200
+    file: ../cli/cogny-cli-llms.txt

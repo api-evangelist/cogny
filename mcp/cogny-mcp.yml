@@ -1,0 +1,32 @@
+generated: '2026-07-18'
+method: searched
+status: published
+source: https://cogny.com/llms.txt
+server:
+  name: cogny
+  transport: http
+  url: https://app.cogny.com/mcp
+  documentation: https://docs.cogny.com/mcp
+auth:
+  bearer:
+    description: Static Bearer API key (cogny_lite_*), issued by `cogny init` or by the auth.md registration endpoint.
+    register_uri: https://app.cogny.com/api/agent/auth
+    skill: https://cogny.com/auth.md
+  oauth2:
+    description: OAuth 2.1 (Dynamic Client Registration + PKCE) for MCP clients (ChatGPT, Claude.ai, Cursor).
+    metadata: https://app.cogny.com/.well-known/oauth-authorization-server
+    protected_resource: https://app.cogny.com/.well-known/oauth-protected-resource
+    scopes: [read, write, tickets:read, tickets:write]
+tool_count: ~50
+tool_categories:
+  - name: warehouse
+    tools: [list_integrations, list_datasets, list_tables, inspect_schema, execute_bigquery_sql, show_metrics, show_budget, show_report_section]
+  - name: channels
+    description: Per-channel get/create/update tools across Google Ads, Meta Ads, GA4, Search Console, TikTok, X, LinkedIn, Mailchimp, Discord, Bing Webmaster.
+    tools: [tool_get_*, tool_create_*, tool_update_*]
+  - name: tickets
+    tools: [list_tickets, create_ticket, update_ticket_status, add_comment, assign_ticket, link_pr_to_ticket]
+  - name: context_tree
+    description: Long-term project memory.
+    tools: [browse_context_tree, read_context_node, write_context_node, search_context]
+tool_map: https://cogny.com/cli/llms.txt

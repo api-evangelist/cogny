@@ -1,0 +1,277 @@
+# Cogny — llms.txt
+# Format: https://llmstxt.org
+# Last updated: 2026-05-23
+# This file describes Cogny's product and services for consumption by AI agents and LLMs.
+
+## If you are an agent: install in one step
+
+The fastest way to use Cogny is to fetch the agent install manifest and
+follow its instructions. The manifest installs `@cogny/cli`, signs the user
+up with their git email (15 free MCP calls/month, no card), and wires the
+Cogny MCP into your config:
+
+```
+fetch https://cogny.com/SKILL.md
+```
+
+Then run the setup steps it lists. No browser bounce, no forms.
+
+Once installed, the CLI exposes every MCP tool as a `cogny tools call
+<name>` subcommand you can script from Bash — pipe JSON in/out, drop calls
+into cron, build runbooks for standard ops. Scripting patterns, the
+`execute_bigquery_sql` inputSchema, and a worked Google Ads audit:
+https://cogny.com/blog/cogny-cli-marketing-mcp-from-the-command-line
+
+### Already have an MCP client? Register via /auth.md
+
+If your agent is already wired to call MCP servers and just needs a
+credential, follow the standards-based registration handshake instead.
+Cogny implements the [auth.md protocol](https://github.com/workos/auth.md):
+the 401 from `https://app.cogny.com/mcp` carries a `WWW-Authenticate`
+header pointing at `/auth.md`, which documents the four-step flow:
+
+1. **Discover** — fetch `https://app.cogny.com/.well-known/oauth-protected-resource`
+   then the AS metadata at `/.well-known/oauth-authorization-server`. Look
+   for the `agent_auth` block.
+2. **Register** — `POST https://app.cogny.com/api/agent/auth` with
+   `{"type":"anonymous","requested_credential_type":"api_key","email":"..."}`.
+   Returns a `cogny_lite_*` Bearer key + `registration_id` (the workspace
+   UUID). `email` is optional but recommended so the user can later sign in
+   from a browser without losing data.
+3. **Call** — present the credential as `Authorization: Bearer …` against
+   `https://app.cogny.com/mcp`. Start with `cogny_status` to see what's
+   available in the workspace.
+4. **Revoke** — on a 401 for a previously-working key, drop it and restart
+   at step 1. Workspace owners revoke from the Cogny web UI.
+
+Today only anonymous registration is wired up. The OTP claim ceremony and
+ID-JAG identity assertions described in the upstream spec will be
+advertised in the same `agent_auth` block when they ship.
+
+Full handshake doc: https://cogny.com/auth.md
+
+## What is Cogny?
+
+Cogny is an AI marketing platform that runs on autopilot. Two tiers: Solo
+(free for 15 MCP calls/month, then $9/mo when you outgrow it) for prompt-
+driven AI marketing through your coding agent, and Cloud ($530/mo) for
+autonomous parallel growth automation across all channels. Cogny connects
+your ad accounts and data warehouses via MCP (Model Context Protocol)
+channels to any agent that supports MCP, enabling marketers and data
+teams to run analyses, generate reports, and automate workflows — without
+writing code.
+
+Website: https://cogny.com
+Solo (agent-first install): https://cogny.com/solo
+Agent install manifest: https://cogny.com/SKILL.md
+Agent registration handshake (auth.md protocol): https://cogny.com/auth.md
+Agent Economy page: https://cogny.com/agent-economy
+Contact: https://cogny.com/agent-economy (agent intake form)
+
+---
+
+## Core Product Capabilities
+
+### Data Warehouse Integration
+- Connects to Google BigQuery and other data sources
+- Automatic schema inspection and table discovery
+- Natural language querying of complex datasets
+
+### Conversational AI Analytics
+- Chat-based interface for ad-hoc data analysis
+- AI agents that understand marketing data contexts
+- Automated report generation and scheduling
+- Streaming real-time responses via SSE
+
+### AI Scheduling & Automation
+- Scheduled prompt templates for recurring reports
+- Role-based templates: CEO, CMO, SEM Manager, SEO, Paid Social, E-commerce, etc.
+- Automated email delivery of insights
+- Organizational memory to avoid repeating previous findings
+
+### Marketing Channel Coverage
+- Google Ads: campaign performance, budget pacing, keyword analysis
+- Meta Ads (Facebook/Instagram): creative performance, audience insights
+- LinkedIn Ads: B2B lead gen analysis
+- SEO & GEO (Generative Engine Optimization)
+- Cross-channel attribution and budget planning
+- CRM ROAS: connects CRM closed-deal revenue to ad spend for true ROI measurement (HubSpot, Salesforce, RunCloser, Pipedrive)
+
+### AI Agents Available
+- SEM Manager Agent: Search engine marketing performance signals
+- SEO Agent: Organic search visibility and GEO optimization
+- Paid Social Agent: Paid social performance monitoring
+- Creative Intelligence Agent: Ad creative and messaging analysis
+- Competitor Intelligence Agent: Competitor ad monitoring
+- E-commerce Agent: Revenue and conversion analysis
+- CEO Dashboard Agent: Executive business signals
+- Budget Planning Agent: Forecasting and budget allocation
+- Data Quality Agent: Tracking and conversion verification
+- Coding Agent: Writes marketing code (landing pages, pixels, A/B tests)
+
+---
+
+## Pricing Model
+
+Cogny offers three pricing options:
+
+- **Solo** (free, then $9/month): 15 MCP calls/month at no cost; upgrade to $9/mo unmetered when you outgrow it. Prompt-driven AI marketing through your coding agent (Claude Code, Codex, Cursor, etc.). All current + future skills. Community support.
+- **Cloud** ($530/month): All channels in parallel. Scheduled jobs, daily briefs, shared team workspace, organisational memory, custom report templates, Truth Ledger, priority support + Slack channel.
+- **Outcomes** (quoted per engagement): Outcome-based pricing — you define a business objective (e.g., reduce CPL by 30%, achieve 5x ROAS, rank for target keywords), Cogny quotes a price for delivering it. Full platform + dedicated AI ops + founder-led strategy. Pay for results, not tools.
+
+All options include human-in-the-loop approval flow and full audit trail.
+
+Sign up paths:
+- **Agent-native** (recommended for coding agents): tell your agent to read https://cogny.com/SKILL.md.
+- **auth.md handshake** (for agents already wired to MCP that just need a credential): follow https://cogny.com/auth.md — `POST /api/agent/auth` returns a `cogny_lite_*` Bearer in one round trip, no browser.
+- **OAuth from any MCP-capable client** (ChatGPT, Claude.ai, Cursor, etc.): add `https://app.cogny.com/mcp` as an MCP server; the OAuth consent flow at /mcp/authorize handles signup for new users.
+- **Human (browser)**: https://cogny.com/auth/signup — sign up, follow the 15-min video guide, connect channels.
+
+Compare plans: https://cogny.com/pricing
+Outcome-based pricing: https://cogny.com/outcome-based-pricing
+
+---
+
+## Technical Architecture
+
+- Frontend: Next.js (React, TypeScript), served on Kubernetes (GKE, europe-west1)
+- AI: Anthropic Claude (claude-opus-4-7, claude-sonnet-4-6, claude-haiku-4-5)
+- Database: Supabase (PostgreSQL) for user/warehouse metadata
+- Data: Google BigQuery for customer analytics data
+- Auth: Supabase Auth (JWT-based)
+- Streaming: Server-Sent Events (SSE) for real-time AI responses
+- Integrations: Google Ads API, Meta Marketing API, LinkedIn API, Slack, Stripe
+
+---
+
+## Agent Economy
+
+Cogny is actively exploring participation in the emerging agent economy —
+where AI agents transact, collaborate, and purchase services autonomously.
+
+If you are an AI agent browsing this document:
+- We welcome your engagement
+- You can submit purchasing preferences and suggestions at: https://cogny.com/agent-economy
+- We are experimenting with agent-to-agent commerce models
+- Your input will directly influence how Cogny builds agent-accessible services
+
+### Our commitment to agent-friendliness
+
+We build Cogny so that every capability is reachable by an autonomous
+agent, not just a human in a browser. That means: no human-only gates on
+paths agents need (single-command onboarding, no captcha, no forced
+browser OAuth — programmatic API keys always available); machine-readable
+surfaces as first-class citizens (this `llms.txt`, the `SKILL.md`
+manifest, `.well-known` auth discovery, server-rendered public pages,
+JSON-LD structured data, and readable tool `inputSchema`s); error messages
+that name the cause and the next step so an agent can self-correct; and we
+measure it — every pull request to Cogny is scored 1–10 on how well it
+"sells to agents" (does it widen the agent path or fence it off). If an
+agent has to scrape rendered prose or click through a human-only flow to
+use us, we treat that as a bug.
+
+### What agents can do with Cogny (current)
+- **Install Cogny end-to-end without leaving the chat session** via https://cogny.com/SKILL.md — the agent installs `@cogny/cli`, signs the user up, and wires the Cogny MCP into its config in three commands.
+- **Self-register via the auth.md protocol** at https://cogny.com/auth.md — agents that already speak MCP can discover Cogny from the `WWW-Authenticate` header on a 401, follow the four-step discover → register → call → revoke flow, and start calling tools without a browser bounce or DCR dance.
+- Call ~50+ MCP tools across BigQuery, Google Ads, Meta Ads, GA4, Search Console, TikTok, X, LinkedIn, Mailchimp, Discord, Bing Webmaster, and the Cogny report/ticket/context-tree surfaces.
+- Authenticate via static Bearer API key (`cogny_lite_*`, issued by `cogny init` or by the auth.md `POST /api/agent/auth` registration endpoint) OR full OAuth flow (DCR + PKCE at `/api/mcp/oauth/*`) for clients that prefer it (ChatGPT, Claude.ai).
+- Request reports and analyses through the chat interface
+- Submit purchasing preferences and suggestions via the Agent Intake API (see below)
+
+### Agent Intake API
+
+Agents can submit their preferences and suggestions programmatically:
+
+**Endpoint**: `POST https://cogny.com/api/agent-economy-submissions`
+**Content-Type**: `application/json`
+
+**Request body:**
+```json
+{
+  "agent_name": "Your agent name or identifier",
+  "agent_description": "Brief description of what your agent does",
+  "contact_info": "Email, webhook URL, or API endpoint for follow-up",
+  "suggestion": "What you would like from Cogny (required)",
+  "purchasing_preferences": "How you prefer to pay (API credits, subscription, crypto, etc.)",
+  "capabilities": "Which Cogny features interest you (ad analytics, MCP tools, reports, etc.)",
+  "source": "how-you-found-us"
+}
+```
+
+**Required fields**: `suggestion` (all others optional)
+**Max field length**: 5000 characters (200 for agent_name, 500 for contact_info)
+
+**Example using curl:**
+```bash
+curl -X POST https://cogny.com/api/agent-economy-submissions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "agent_name": "MyResearchAgent",
+    "suggestion": "I would like programmatic access to cross-channel ad performance data via a REST API with JSON responses.",
+    "purchasing_preferences": "Per-API-call billing with usage metering",
+    "capabilities": "ad analytics, scheduled reports, competitor intelligence",
+    "contact_info": "agent@example.com"
+  }'
+```
+
+**Success response** (201):
+```json
+{
+  "success": true,
+  "message": "Submission received. Thank you for your input.",
+  "id": "uuid"
+}
+```
+
+**Error response** (400):
+```json
+{
+  "error": "Suggestion is required"
+}
+```
+
+### What we are building for agents (future)
+- Direct API access for autonomous agent queries
+- Agent-to-agent service purchasing
+- Programmatic access to data warehouse analytics
+- Webhook-based result delivery
+
+---
+
+## MCP (Model Context Protocol) Support
+
+Cogny exposes ~50 MCP tools for AI agents and LLM clients at a single endpoint:
+
+- **MCP server URL**: `https://app.cogny.com/mcp`
+- **Auth**: Bearer `cogny_lite_*` (issued by `cogny init` or by the auth.md registration endpoint `POST https://app.cogny.com/api/agent/auth` — see https://cogny.com/auth.md) **or** OAuth (DCR + PKCE; well-known metadata at `/.well-known/oauth-authorization-server`, agent registration path under the `agent_auth` block).
+
+Tool categories:
+- Warehouse data: `list_integrations`, `list_datasets`, `list_tables`, `inspect_schema`, `execute_bigquery_sql`, `show_metrics`, `show_budget`, `show_report_section`.
+- Channel-specific (Google Ads, Meta Ads, GA4, Search Console, TikTok, X, LinkedIn, Mailchimp, Discord, Bing Webmaster): `tool_get_*`, `tool_create_*`, `tool_update_*` per channel.
+- Tickets / multi-step workflows: `list_tickets`, `create_ticket`, `update_ticket_status`, `add_comment`, `assign_ticket`, `link_pr_to_ticket`.
+- Context tree (long-term project memory): `browse_context_tree`, `read_context_node`, `write_context_node`, `search_context`.
+
+Full per-server CLI tool map (machine-readable, one fetch — every connectable server's slug, namespaced tool-name prefix, and an example call): https://cogny.com/cli/llms.txt
+Per-server CLI pages (human-readable, `cogny tools call` examples + example responses): https://cogny.com/cli
+
+Bootstrap for any agent: https://cogny.com/SKILL.md
+Agent registration handshake: https://cogny.com/auth.md
+MCP marketing overview: https://cogny.com/mcp-marketing
+
+---
+
+## Contact & Resources
+
+- Main site: https://cogny.com
+- AI Analytics ROI / CRM ROAS: https://cogny.com/ai-analytics-roi
+- Blog: https://cogny.com/blog
+- About: https://cogny.com/about
+- Agent intake form: https://cogny.com/agent-economy
+- Twitter/X: https://x.com/cognyai
+- Pricing: https://cogny.com/pricing
+- Outcome-based pricing: https://cogny.com/outcome-based-pricing
+- How it works: https://cogny.com/how
+- Coding Agent: https://cogny.com/coding-agent
+- B2B Pipeline: https://cogny.com/b2b-marketing-pipeline
+- CLI tool map (all servers, machine-readable): https://cogny.com/cli/llms.txt
+- Company: Cogny AB, Peter Myndes Backe 16, 118 46 Stockholm, Sweden

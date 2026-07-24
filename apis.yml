@@ -1,24 +1,165 @@
 aid: cogny
 name: Cogny
-description: 'Cogny is a company surfaced as a portfolio company of hv-capital and added to the API Evangelist
-  network as a stub for enrichment. Sector: ai-enterprise-software. This profile is a lead awaiting the
-  enrichment pipeline.'
+description: >-
+  Cogny is a Stockholm-based AI marketing platform (Cogny AB) that runs marketing
+  analytics and automation on autopilot for marketers and data teams. It connects
+  ad accounts and data warehouses (Google BigQuery, Google Ads, Meta Ads, LinkedIn,
+  GA4, Search Console, TikTok, X, Mailchimp and more) to any MCP-capable coding
+  agent, exposing ~50 Model Context Protocol tools plus a REST API for AI-generated
+  growth reports (with SSE streaming) and growth tickets. Cogny is deeply
+  agent-native: a one-command install manifest (SKILL.md), an auth.md registration
+  handshake that issues anonymous cogny_lite_* API keys with no browser bounce, an
+  @cogny/cli, and machine-readable llms.txt and .well-known discovery surfaces.
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://app.cogny.com/logo512.png
 url: https://raw.githubusercontent.com/api-evangelist/cogny/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - hv-capital
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: enriched
+x-tier-reason: enrichment-pipeline
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-18'
 tags:
 - Company
 - Ai Enterprise Software
-apis: []
+- Marketing
+- Marketing Analytics
+- Marketing Automation
+- MCP
+- Agents
+- Data Warehouse
+- Advertising
+apis:
+- aid: cogny:cogny-reports-api
+  name: Cogny Reports API
+  description: AI-powered growth report generation with streaming responses.
+  humanURL: https://cogny.com/docs/api-overview-authentication
+  baseURL: https://api.cogny.com/v1
+  tags:
+  - Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/cogny-reports-api-openapi.yml
+  - type: APIReference
+    url: https://cogny.com/docs/api-overview-authentication
+- aid: cogny:cogny-tickets-api
+  name: Cogny Tickets API
+  description: AI-generated growth tickets (recommendations) management.
+  humanURL: https://cogny.com/docs/api-overview-authentication
+  baseURL: https://api.cogny.com/v1
+  tags:
+  - Tickets
+  properties:
+  - type: OpenAPI
+    url: openapi/cogny-tickets-api-openapi.yml
+  - type: APIReference
+    url: https://cogny.com/docs/api-overview-authentication
+- aid: cogny:cogny-warehouses-api
+  name: Cogny Warehouses API
+  description: Connected data-warehouse resources.
+  humanURL: https://cogny.com/docs/api-overview-authentication
+  baseURL: https://api.cogny.com/v1
+  tags:
+  - Warehouses
+  properties:
+  - type: OpenAPI
+    url: openapi/cogny-warehouses-api-openapi.yml
+  - type: APIReference
+    url: https://cogny.com/docs/api-overview-authentication
+- aid: cogny:cogny-webhooks-api
+  name: Cogny Webhooks API
+  description: Webhook subscription configuration.
+  humanURL: https://cogny.com/docs/api-overview-authentication
+  baseURL: https://api.cogny.com/v1
+  tags:
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/cogny-webhooks-api-openapi.yml
+  - type: APIReference
+    url: https://cogny.com/docs/api-overview-authentication
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+common:
+# --- link properties (discoverability + ergonomics) ---
+- type: DeveloperPortal
+  url: https://cogny.com/docs
+- type: Documentation
+  url: https://cogny.com/docs
+- type: APIReference
+  url: https://cogny.com/docs/api-overview-authentication
+- type: GettingStarted
+  url: https://cogny.com/solo
+- type: Blog
+  url: https://cogny.com/blog
+- type: GitHubOrganization
+  url: https://github.com/cognyai
+- type: Pricing
+  url: https://cogny.com/pricing
+- type: SignUp
+  url: https://cogny.com/auth/signup
+- type: TermsOfService
+  url: https://cogny.com/terms
+- type: PrivacyPolicy
+  url: https://cogny.com/privacy
+# --- artifacts ---
+- type: LLMsTxt
+  url: llms/cogny-llms.txt
+- type: WellKnown
+  url: well-known/cogny-well-known.yml
+- type: MCPServer
+  url: mcp/cogny-mcp.yml
+- type: Packages
+  url: packages/cogny-packages.yml
+- type: SDKs
+  url: packages/cogny-packages.yml
+- type: CLI
+  url: cli/cogny-cli.yml
+- type: Authentication
+  url: authentication/cogny-authentication.yml
+- type: OAuthScopes
+  url: scopes/cogny-scopes.yml
+- type: Conventions
+  url: conventions/cogny-conventions.yml
+- type: ErrorCatalog
+  url: errors/cogny-error-codes.yml
+- type: Lifecycle
+  url: lifecycle/cogny-lifecycle.yml
+- type: Conformance
+  url: conformance/cogny-conformance.yml
+- type: Webhooks
+  url: asyncapi/cogny-webhooks.yml
+- type: DataModel
+  url: data-model/cogny-data-model.yml
+- type: Sandbox
+  url: sandbox/cogny-sandbox.yml
+- type: Overlay
+  url: overlays/cogny-overlay.yaml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: AgenticAccess
+  url: agentic-access/cogny-agentic-access.yml
+- type: DomainSecurity
+  url: security/cogny-domain-security.yml
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

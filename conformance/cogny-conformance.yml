@@ -1,0 +1,31 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/cogny-openapi.yml + well-known/cogny-oauth-authorization-server.json
+standards:
+  - id: oauth2
+    conforms: true
+    evidence: OAuth 2.1 authorizationCode flow in securitySchemes; /.well-known/oauth-authorization-server published.
+  - id: oauth2-pkce
+    conforms: true
+    evidence: code_challenge_methods_supported [S256] in oauth-authorization-server metadata.
+  - id: oauth2-dcr
+    conforms: true
+    evidence: registration_endpoint published (Dynamic Client Registration).
+  - id: rfc8414-as-metadata
+    conforms: true
+    evidence: /.well-known/oauth-authorization-server returns AS metadata.
+  - id: rfc9728-protected-resource-metadata
+    conforms: true
+    evidence: /.well-known/oauth-protected-resource published at app.cogny.com.
+  - id: mcp
+    conforms: true
+    evidence: Hosted MCP server at https://app.cogny.com/mcp with ~50 tools.
+  - id: bearer-token-rfc6750
+    conforms: true
+    evidence: Authorization Bearer scheme for API keys.
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: Uses custom { success, error{code,message,details} } envelope, not application/problem+json.
+  - id: openid-connect
+    conforms: false
+    evidence: No /.well-known/openid-configuration (404).

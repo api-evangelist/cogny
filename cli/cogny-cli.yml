@@ -1,0 +1,26 @@
+generated: '2026-07-18'
+method: searched
+source: https://cogny.com/SKILL.md
+name: cogny
+package: "@cogny/cli"
+install:
+  - npm install -g @cogny/cli
+  - npx @cogny/cli
+description: >-
+  First-party CLI that signs the user up (15 free MCP calls/month, no card),
+  wires the Cogny MCP into the coding agent's config, and exposes every MCP tool
+  as a scriptable subcommand.
+commands:
+  - group: init
+    summary: Sign up with git email and issue a cogny_lite_* API key; wire MCP config.
+  - group: tools
+    summary: Enumerate and invoke MCP tools.
+    subcommands:
+      - "cogny tools list"
+      - "cogny tools call <name> --input '<json>'"
+  - group: status
+    summary: Show workspace status and connected integrations (cogny_status).
+notes: >-
+  Each MCP tool maps to `cogny tools call <name>` and pipes JSON in/out, so calls
+  can be scripted from Bash or cron. Full per-server tool map: https://cogny.com/cli/llms.txt
+docs: https://cogny.com/blog/cogny-cli-marketing-mcp-from-the-command-line

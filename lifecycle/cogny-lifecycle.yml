@@ -1,0 +1,15 @@
+generated: '2026-07-18'
+method: searched
+source: https://cogny.com/docs/api-overview-authentication
+versioning:
+  scheme: uri-path
+  current: v1
+  base_url: https://api.cogny.com/v1
+deprecation:
+  policy_url: null
+  sunset_header: null
+  note: No published deprecation policy or Sunset/Deprecation header support found.
+sla:
+  url: null
+status_page: null
+deprecated_operations: []

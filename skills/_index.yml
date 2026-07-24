@@ -1,0 +1,19 @@
+generated: '2026-07-18'
+method: searched
+source: https://cogny.com/SKILL.md
+skills:
+  - file: cogny-SKILL.md
+    name: Install Cogny and wire the MCP into your agent
+    method: searched
+    source: https://cogny.com/SKILL.md
+    description: Provider-published agent install manifest — installs @cogny/cli, signs up, wires the Cogny MCP.
+  - file: cogny-create-and-stream-report.md
+    name: Generate and stream a growth report
+    method: generated
+    api: openapi/cogny-openapi.yml
+    operations: [listWarehouses, createReport, streamReport, getReportContent]
+  - file: cogny-triage-growth-tickets.md
+    name: Triage growth tickets
+    method: generated
+    api: openapi/cogny-openapi.yml
+    operations: [listTickets, getTicket, updateTicket, dismissTicket]

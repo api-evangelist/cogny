@@ -1,0 +1,26 @@
+generated: '2026-07-18'
+method: searched
+source: openapi/cogny-openapi.yml
+docs: https://cogny.com/docs/api-overview-authentication
+schemes:
+  - name: oauth2
+    source: well-known/cogny-oauth-authorization-server.json
+    flows:
+      - flow: authorizationCode
+        authorizationUrl: https://cogny.com/api/mcp/oauth/authorize
+        tokenUrl: https://cogny.com/api/mcp/oauth/token
+    description: OAuth 2.1 (DCR + PKCE) for MCP clients.
+scopes:
+  # From the OAuth authorization-server metadata (MCP surface)
+  - {scope: read, description: Read access, source: well-known}
+  - {scope: write, description: Write access, source: well-known}
+  - {scope: 'tickets:read', description: Read tickets, source: well-known}
+  - {scope: 'tickets:write', description: Write tickets, source: well-known}
+  # From the REST API key-scope reference (docs)
+  - {scope: 'reports:read', description: Read growth reports, source: docs}
+  - {scope: 'reports:write', description: Create/cancel growth reports, source: docs}
+  - {scope: 'warehouses:read', description: Read connected warehouses, source: docs}
+  - {scope: 'warehouses:write', description: Manage connected warehouses, source: docs}
+notes: >-
+  Two scope surfaces: the OAuth MCP flow advertises read/write/tickets:*; the REST
+  API-key generator (Settings > API Keys) offers reports:*, tickets:read, warehouses:*.

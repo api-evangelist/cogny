@@ -1,0 +1,29 @@
+generated: '2026-07-18'
+method: searched
+source: https://cogny.com/docs (api-overview-authentication, report-builder-api-reference)
+format: custom
+envelope:
+  success: false
+  error:
+    code: string
+    message: string
+    details: object
+http_status_codes:
+  - {status: 200, meaning: OK}
+  - {status: 201, meaning: Created}
+  - {status: 400, meaning: Bad Request}
+  - {status: 401, meaning: Unauthorized}
+  - {status: 403, meaning: Forbidden}
+  - {status: 404, meaning: Not Found}
+  - {status: 429, meaning: Too Many Requests}
+  - {status: 500, meaning: Internal Server Error}
+error_codes:
+  - {code: INVALID_PARAMETER, http: 400, meaning: A request parameter is invalid}
+  - {code: WAREHOUSE_NOT_FOUND, http: 404, meaning: Specified warehouse does not exist}
+  - {code: WAREHOUSE_NOT_CONNECTED, http: 400, meaning: Warehouse is not properly connected}
+  - {code: INVALID_PROMPT, http: 400, meaning: Prompt is empty or exceeds max length}
+  - {code: INVALID_DATE_RANGE, http: 400, meaning: Date range is invalid or too large}
+  - {code: INSUFFICIENT_PERMISSIONS, http: 403, meaning: API key lacks required permissions/scope}
+  - {code: QUERY_FAILED, http: 500, meaning: SQL query execution failed}
+  - {code: RATE_LIMIT_EXCEEDED, http: 429, meaning: Too many concurrent reports}
+  - {code: REPORT_NOT_FOUND, http: 404, meaning: Report ID does not exist}

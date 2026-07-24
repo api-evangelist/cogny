@@ -1,0 +1,27 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/cogny-openapi.yml
+entities:
+  - name: Warehouse
+    description: A connected data warehouse (e.g. Google BigQuery).
+    key: id
+  - name: Report
+    description: An AI-generated growth report produced from a natural-language prompt over a warehouse.
+    key: id
+    fields: [warehouse_id, status, prompt, summary, url, stream_url]
+  - name: ReportContent
+    description: The rendered content of a completed report (sections, insights, visualizations, recommendations).
+    key: report_id
+  - name: Ticket
+    description: An AI-generated growth ticket (recommendation) with impact/effort and action items.
+    key: id
+    fields: [category, priority, status, estimated_impact, effort, action_items]
+  - name: Webhook
+    description: A webhook subscription for event delivery.
+relationships:
+  - {from: Report, to: Warehouse, type: belongs_to, via: warehouse_id}
+  - {from: ReportContent, to: Report, type: belongs_to, via: report_id}
+  - {from: Ticket, to: Warehouse, type: belongs_to, via: warehouse_id}
+notes: >-
+  Relationships derived from id-reference fields in the documented request/response
+  bodies. Object id-prefix conventions are not published in the API reference.

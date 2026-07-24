@@ -1,0 +1,576 @@
+openapi: 3.1.0
+# generated: '2026-07-18'
+# method: generated
+# source: https://cogny.com/docs (api-overview-authentication, growth-tickets-api-reference, report-builder-api-reference)
+# NOTE: Faithfully transcribed from Cogny's published REST API reference. Cogny does not
+# publish a machine-readable OpenAPI document; this spec captures the documented surface
+# verbatim (paths, fields, error codes, scopes) without inventing behavior.
+info:
+  title: Cogny API
+  version: '1'
+  description: >-
+    Cogny is an AI marketing platform. The REST API exposes the Report Builder
+    (AI-generated growth reports with SSE streaming), Growth Tickets, and warehouse
+    resources. Authentication is a Bearer API key (sk_live_* / sk_test_*).
+  contact:
+    name: Cogny
+    url: https://cogny.com
+  termsOfService: https://cogny.com/terms
+servers:
+  - url: https://api.cogny.com/v1
+    description: Production
+security:
+  - bearerAuth: []
+tags:
+  - name: Reports
+    description: AI-powered growth report generation with streaming responses.
+  - name: Tickets
+    description: AI-generated growth tickets (recommendations) management.
+  - name: Warehouses
+    description: Connected data-warehouse resources.
+  - name: Webhooks
+    description: Webhook subscription configuration.
+paths:
+  /reports:
+    get:
+      operationId: listReports
+      summary: List reports
+      tags: [Reports]
+      security:
+        - bearerAuth: [reports:read]
+      parameters:
+        - { name: warehouse_id, in: query, schema: { type: string } }
+        - { name: status, in: query, schema: { type: string, enum: [queued, processing, completed, failed, cancelled] } }
+        - { name: created_after, in: query, schema: { type: string, format: date-time } }
+        - { name: created_before, in: query, schema: { type: string, format: date-time } }
+        - { name: limit, in: query, schema: { type: integer, maximum: 100 } }
+        - { name: cursor, in: query, schema: { type: string } }
+      responses:
+        '200':
+          description: A page of reports.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data: { type: array, items: { $ref: '#/components/schemas/Report' } }
+                  pagination: { $ref: '#/components/schemas/Pagination' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+    post:
+      operationId: createReport
+      summary: Create a report
+      description: Start an AI-generated growth report from a natural-language prompt over a connected warehouse.
+      tags: [Reports]
+      security:
+        - bearerAuth: [reports:write]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateReportRequest' }
+      responses:
+        '201':
+          description: Report accepted for processing.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data: { $ref: '#/components/schemas/Report' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+  /reports/{report_id}:
+    parameters:
+      - { name: report_id, in: path, required: true, schema: { type: string } }
+    get:
+      operationId: getReport
+      summary: Get report status
+      tags: [Reports]
+      security:
+        - bearerAuth: [reports:read]
+      responses:
+        '200':
+          description: Report status.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data: { $ref: '#/components/schemas/Report' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    delete:
+      operationId: cancelReport
+      summary: Cancel a report
+      tags: [Reports]
+      security:
+        - bearerAuth: [reports:write]
+      responses:
+        '200':
+          description: Report cancelled.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      status: { type: string, enum: [cancelled] }
+                      cancelled_at: { type: string, format: date-time }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /reports/{report_id}/stream:
+    parameters:
+      - { name: report_id, in: path, required: true, schema: { type: string } }
+    get:
+      operationId: streamReport
+      summary: Stream report generation (SSE)
+      description: >-
+        Server-Sent Events stream of report generation. Event types: status, query,
+        result, insight, visualization, completed, error.
+      tags: [Reports]
+      security:
+        - bearerAuth: [reports:read]
+      responses:
+        '200':
+          description: An SSE stream.
+          content:
+            text/event-stream:
+              schema: { type: string }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /reports/{report_id}/content:
+    parameters:
+      - { name: report_id, in: path, required: true, schema: { type: string } }
+    get:
+      operationId: getReportContent
+      summary: Get report content
+      tags: [Reports]
+      security:
+        - bearerAuth: [reports:read]
+      responses:
+        '200':
+          description: Full report content with sections, insights, visualizations, recommendations.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data: { $ref: '#/components/schemas/ReportContent' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /tickets:
+    get:
+      operationId: listTickets
+      summary: List growth tickets
+      tags: [Tickets]
+      security:
+        - bearerAuth: [tickets:read]
+      parameters:
+        - { name: warehouse_id, in: query, schema: { type: string } }
+        - { name: status, in: query, schema: { type: string } }
+        - { name: priority, in: query, schema: { type: string } }
+        - { name: category, in: query, schema: { type: string } }
+        - { name: created_after, in: query, schema: { type: string, format: date-time } }
+        - { name: created_before, in: query, schema: { type: string, format: date-time } }
+        - { name: updated_after, in: query, schema: { type: string, format: date-time } }
+        - { name: sort, in: query, schema: { type: string } }
+        - { name: limit, in: query, schema: { type: integer } }
+        - { name: cursor, in: query, schema: { type: string } }
+      responses:
+        '200':
+          description: A page of tickets.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data: { type: array, items: { $ref: '#/components/schemas/Ticket' } }
+                  pagination: { $ref: '#/components/schemas/Pagination' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+  /tickets/{ticket_id}:
+    parameters:
+      - { name: ticket_id, in: path, required: true, schema: { type: string } }
+    get:
+      operationId: getTicket
+      summary: Get a ticket
+      tags: [Tickets]
+      security:
+        - bearerAuth: [tickets:read]
+      responses:
+        '200':
+          description: Ticket detail.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data: { $ref: '#/components/schemas/Ticket' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    patch:
+      operationId: updateTicket
+      summary: Update a ticket
+      description: Update ticket status, priority, assignee, notes, action_items.
+      tags: [Tickets]
+      security:
+        - bearerAuth: [tickets:write]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status: { type: string }
+                priority: { type: string }
+                assignee: { type: string }
+                notes: { type: string }
+                action_items: { type: array, items: { type: string } }
+      responses:
+        '200':
+          description: Updated ticket.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data: { $ref: '#/components/schemas/Ticket' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /tickets/bulk-update:
+    post:
+      operationId: bulkUpdateTickets
+      summary: Bulk update tickets
+      tags: [Tickets]
+      security:
+        - bearerAuth: [tickets:write]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ticket_ids: { type: array, items: { type: string } }
+                updates: { type: object }
+      responses:
+        '200':
+          description: Bulk update result.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  updated_count: { type: integer }
+                  failed_count: { type: integer }
+                  updated_ids: { type: array, items: { type: string } }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+  /tickets/{ticket_id}/dismiss:
+    parameters:
+      - { name: ticket_id, in: path, required: true, schema: { type: string } }
+    post:
+      operationId: dismissTicket
+      summary: Dismiss a ticket
+      tags: [Tickets]
+      security:
+        - bearerAuth: [tickets:write]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                  enum: [not_applicable, already_implemented, insufficient_impact, resource_constraints, other]
+                notes: { type: string }
+      responses:
+        '200':
+          description: Dismissed ticket.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data: { $ref: '#/components/schemas/Ticket' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /tickets/stats:
+    get:
+      operationId: getTicketStats
+      summary: Get ticket statistics
+      tags: [Tickets]
+      security:
+        - bearerAuth: [tickets:read]
+      responses:
+        '200':
+          description: Aggregated ticket statistics.
+          content:
+            application/json:
+              schema: { type: object }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /tickets/export:
+    post:
+      operationId: exportTickets
+      summary: Export tickets
+      tags: [Tickets]
+      security:
+        - bearerAuth: [tickets:read]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                format: { type: string, enum: [csv, json, xlsx, jira, asana, linear] }
+                filters: { type: object }
+                include_fields: { type: array, items: { type: string } }
+      responses:
+        '200':
+          description: Export descriptor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  export_id: { type: string }
+                  download_url: { type: string }
+                  expires_at: { type: string, format: date-time }
+                  ticket_count: { type: integer }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /warehouses:
+    get:
+      operationId: listWarehouses
+      summary: List connected warehouses
+      tags: [Warehouses]
+      security:
+        - bearerAuth: [warehouses:read]
+      responses:
+        '200':
+          description: Connected data warehouses.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data: { type: array, items: { $ref: '#/components/schemas/Warehouse' } }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /webhooks:
+    post:
+      operationId: createWebhook
+      summary: Configure a webhook subscription
+      tags: [Webhooks]
+      security:
+        - bearerAuth: [write]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url: { type: string, format: uri }
+                events: { type: array, items: { type: string } }
+      responses:
+        '201':
+          description: Webhook subscription created.
+          content:
+            application/json:
+              schema: { type: object }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: >-
+        Bearer API key. Production keys are prefixed sk_live_, test keys sk_test_.
+        MCP-issued anonymous keys are prefixed cogny_lite_.
+    apiKeyHeader:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Legacy API-key header (equivalent to Bearer).
+    oauth2:
+      type: oauth2
+      description: OAuth 2.1 (DCR + PKCE) for MCP clients.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://cogny.com/api/mcp/oauth/authorize
+          tokenUrl: https://cogny.com/api/mcp/oauth/token
+          scopes:
+            read: Read access
+            write: Write access
+            tickets:read: Read tickets
+            tickets:write: Write tickets
+  responses:
+    BadRequest:
+      description: Invalid request.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Forbidden:
+      description: API key lacks required scope.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    RateLimited:
+      description: Rate limit exceeded.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+  schemas:
+    Error:
+      type: object
+      properties:
+        success: { type: boolean, enum: [false] }
+        error:
+          type: object
+          properties:
+            code: { type: string }
+            message: { type: string }
+            details: { type: object }
+    Pagination:
+      type: object
+      properties:
+        has_more: { type: boolean }
+        next_cursor: { type: string }
+        total_count: { type: integer }
+    CreateReportRequest:
+      type: object
+      required: [warehouse_id, prompt]
+      properties:
+        warehouse_id: { type: string }
+        prompt: { type: string, maxLength: 2000 }
+        context:
+          type: object
+          properties:
+            date_range:
+              type: object
+              properties:
+                start: { type: string, format: date }
+                end: { type: string, format: date }
+            dimensions: { type: array, items: { type: string } }
+            focus_areas: { type: array, items: { type: string } }
+        options:
+          type: object
+          properties:
+            include_visualizations: { type: boolean, default: true }
+            include_sql_queries: { type: boolean, default: false }
+            include_recommendations: { type: boolean, default: true }
+            max_iterations: { type: integer, default: 50, maximum: 100 }
+            language: { type: string, default: en }
+        metadata: { type: object }
+    Report:
+      type: object
+      properties:
+        id: { type: string }
+        warehouse_id: { type: string }
+        status: { type: string, enum: [queued, processing, completed, failed, cancelled] }
+        prompt: { type: string }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+        completed_at: { type: string, format: date-time }
+        estimated_completion: { type: string, format: date-time }
+        url: { type: string }
+        stream_url: { type: string }
+        summary:
+          type: object
+          properties:
+            total_queries: { type: integer }
+            total_insights: { type: integer }
+            key_findings: { type: array, items: { type: string } }
+        metadata: { type: object }
+    ReportContent:
+      type: object
+      properties:
+        report_id: { type: string }
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              title: { type: string }
+              content: { type: string }
+              insights: { type: array, items: { $ref: '#/components/schemas/Insight' } }
+              visualizations: { type: array, items: { type: object } }
+              queries: { type: array, items: { type: object } }
+        recommendations:
+          type: array
+          items:
+            type: object
+            properties:
+              priority: { type: string, enum: [high, medium, low] }
+              title: { type: string }
+              description: { type: string }
+              estimated_impact: { type: string }
+              effort: { type: string }
+              action_items: { type: array, items: { type: string } }
+        metadata:
+          type: object
+          properties:
+            total_queries: { type: integer }
+            total_insights: { type: integer }
+            generation_time_seconds: { type: number }
+    Insight:
+      type: object
+      properties:
+        type: { type: string }
+        content: { type: string }
+        confidence: { type: number }
+        data: { type: object }
+    Ticket:
+      type: object
+      properties:
+        id: { type: string }
+        title: { type: string }
+        description: { type: string }
+        category: { type: string }
+        priority: { type: string }
+        status: { type: string }
+        estimated_impact: { type: string }
+        effort: { type: string }
+        action_items: { type: array, items: { type: string } }
+        supporting_data: { type: object }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+        url: { type: string }
+    Warehouse:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        type: { type: string }
+        status: { type: string }

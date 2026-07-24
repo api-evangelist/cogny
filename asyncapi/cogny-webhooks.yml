@@ -1,0 +1,22 @@
+generated: '2026-07-18'
+method: searched
+type: Webhooks
+source: https://cogny.com/docs/growth-tickets-api-reference
+summary: >-
+  Cogny lets clients configure webhook subscriptions via POST /v1/webhooks to
+  receive event notifications. A full event-type catalog is not yet published;
+  webhook-based result delivery is documented as an expanding surface.
+configuration:
+  endpoint: POST https://api.cogny.com/v1/webhooks
+  request_fields:
+    - {name: url, type: uri, description: Subscriber endpoint URL}
+    - {name: events, type: array, description: Event types to subscribe to (catalog not yet published)}
+delivery:
+  streaming_alternative:
+    protocol: server-sent-events
+    endpoint: GET https://api.cogny.com/v1/reports/{report_id}/stream
+    event_types: [status, query, result, insight, visualization, completed, error]
+notes: >-
+  The SSE stream on the Report Builder is the documented real-time delivery channel;
+  webhook subscriptions are configurable but the published docs do not yet enumerate
+  the webhook event types. No AsyncAPI document is published by the provider.

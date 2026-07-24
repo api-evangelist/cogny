@@ -1,0 +1,15 @@
+generated: '2026-07-18'
+method: searched
+source: https://registry.npmjs.org/@cogny/cli
+packages:
+  - language: javascript
+    registry: npm
+    name: "@cogny/cli"
+    version: 0.3.0
+    url: https://www.npmjs.com/package/@cogny/cli
+    install: npm install -g @cogny/cli
+    repository: https://github.com/cognyai/cogny-cli
+    description: >-
+      Cogny CLI — sign up, wire your coding agent to Cogny, run marketing skills on
+      your own data. Exposes every MCP tool as `cogny tools call <name>`.
+    official: true

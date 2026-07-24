@@ -1,0 +1,20 @@
+generated: '2026-07-18'
+method: searched
+source: https://cogny.com/docs/api-overview-authentication + https://cogny.com/llms.txt
+test_live_separation:
+  live_key_prefix: sk_live_
+  test_key_prefix: sk_test_
+  note: >-
+    Bearer API keys are environment-scoped by prefix; sk_test_ keys target the
+    development/test path and sk_live_ keys target production.
+free_tier:
+  mcp_anonymous_key_prefix: cogny_lite_
+  note: >-
+    The auth.md handshake (POST /api/agent/auth, type=anonymous) issues a
+    cogny_lite_* Bearer key with 15 free MCP calls/month and no card, letting an
+    agent exercise the MCP surface before committing to a paid plan.
+test_values: []
+notes: >-
+  Cogny does not publish magic test card numbers or fixture identifiers (it is a
+  marketing-analytics platform, not a payments API); the sandbox surface is the
+  test-key prefix plus the free anonymous MCP tier. No test values are invented here.

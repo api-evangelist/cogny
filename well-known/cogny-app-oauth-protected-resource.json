@@ -1,0 +1,1 @@
+{"resource":"https://app.cogny.com/mcp","resource_name":"Cogny","resource_logo_uri":"https://app.cogny.com/logo512.png","authorization_servers":["https://app.cogny.com"],"scopes_supported":["read","write","tickets:read","tickets:write"],"bearer_methods_supported":["header"]}

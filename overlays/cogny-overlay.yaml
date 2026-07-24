@@ -1,0 +1,24 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Cogny API
+  version: 1.0.0
+extends: openapi/cogny-openapi.yml
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-enriched: '2026-07-18'
+      x-apievangelist-notes: >-
+        Spec transcribed by API Evangelist from Cogny's published REST reference;
+        Cogny does not publish a machine-readable OpenAPI document.
+  - target: $.info
+    update:
+      x-rate-limits:
+        standard: 100/min
+        enterprise: 1000/min
+        batch: 10/min
+  - target: $.components.securitySchemes
+    update:
+      x-key-prefixes:
+        live: sk_live_
+        test: sk_test_
+        mcp_anonymous: cogny_lite_

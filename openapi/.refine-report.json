@@ -1,0 +1,20 @@
+{
+  "provider": "cogny",
+  "sources": [
+    "cogny-reports-api-openapi.yml",
+    "cogny-tickets-api-openapi.yml",
+    "cogny-warehouses-api-openapi.yml",
+    "cogny-webhooks-api-openapi.yml"
+  ],
+  "outputs": [
+    "cogny-reports-api-openapi.yml",
+    "cogny-tickets-api-openapi.yml",
+    "cogny-warehouses-api-openapi.yml",
+    "cogny-webhooks-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

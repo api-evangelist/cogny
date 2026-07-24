@@ -1,0 +1,45 @@
+generated: '2026-07-18'
+method: searched
+source: https://cogny.com/docs/api-overview-authentication
+authentication:
+  style: bearer-api-key
+  header: "Authorization: Bearer <key>"
+  legacy_header: "X-API-Key: <key>"
+  key_prefixes:
+    live: sk_live_
+    test: sk_test_
+    mcp_anonymous: cogny_lite_
+  see: authentication/cogny-authentication.yml
+pagination:
+  style: cursor
+  request_params: [limit, cursor]
+  response_fields: [pagination.has_more, pagination.next_cursor, pagination.total_count]
+  limit_max: 100
+error_envelope:
+  shape: custom
+  example:
+    success: false
+    error:
+      code: INVALID_PARAMETER
+      message: "..."
+      details: {}
+  note: >-
+    Cogny uses a custom { success, error{code,message,details} } envelope, NOT
+    RFC 9457 application/problem+json.
+  see: errors/cogny-error-codes.yml
+rate_limiting:
+  standard_tier: 100 req/min
+  enterprise_tier: 1000 req/min
+  batch_operations: 10 req/min
+  exceeded_code: 429
+streaming:
+  protocol: server-sent-events
+  endpoint: GET /v1/reports/{report_id}/stream
+  event_types: [status, query, result, insight, visualization, completed, error]
+versioning:
+  scheme: uri-path
+  current: v1
+  base_url: https://api.cogny.com/v1
+idempotency:
+  supported: false
+  note: No idempotency-key header is documented in the public API reference.
