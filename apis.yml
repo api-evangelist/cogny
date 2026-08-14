@@ -9,7 +9,8 @@ description: >-
   growth reports (with SSE streaming) and growth tickets. Cogny is deeply
   agent-native: a one-command install manifest (SKILL.md), an auth.md registration
   handshake that issues anonymous cogny_lite_* API keys with no browser bounce, an
-  @cogny/cli, and machine-readable llms.txt and .well-known discovery surfaces.
+  @cogny/cli, a public library of 53 first-party Agent Skills, and machine-readable
+  llms.txt and .well-known discovery surfaces.
 accessModel:
   pricing: unknown
   onboarding: self-serve
@@ -32,7 +33,7 @@ x-tier: enriched
 x-tier-reason: enrichment-pipeline
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-18'
+modified: '2026-08-13'
 tags:
 - Company
 - Ai Enterprise Software
@@ -109,6 +110,8 @@ common:
   url: https://cogny.com/solo
 - type: Blog
   url: https://cogny.com/blog
+- type: Support
+  url: https://cogny.com/contact
 - type: GitHubOrganization
   url: https://github.com/cognyai
 - type: Pricing
@@ -126,6 +129,8 @@ common:
   url: well-known/cogny-well-known.yml
 - type: MCPServer
   url: mcp/cogny-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/cogny-tool-crosswalk.yml
 - type: Packages
   url: packages/cogny-packages.yml
 - type: SDKs
@@ -154,12 +159,31 @@ common:
   url: overlays/cogny-overlay.yaml
 - type: AgentSkill
   url: skills/_index.yml
+- type: AgentSkill
+  url: skills/cogny-published-skills.yml
 - type: AgenticAccess
   url: agentic-access/cogny-agentic-access.yml
 - type: DomainSecurity
   url: security/cogny-domain-security.yml
+- type: Plans
+  url: plans/cogny-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/cogny-rate-limits.yml
+- type: VulnerabilityDisclosure
+  url: security/cogny-vulnerability-disclosure.yml
+- type: Security
+  url: security/cogny-vulnerability-disclosure.yml
+- type: TrustCenter
+  url: security/cogny-trust-center.yml
+- type: Compliance
+  url: security/cogny-trust-center.yml
 x-enrichment:
-  date: '2026-07-19'
-  status: backfilled
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 6
   pass: local-v1
-  note: backfilled from .gitignore signal + verified work evidence
+  note: >-
+    Found Cogny's 53-skill first-party Agent Skill library on GitHub; corrected a
+    false SOC 2 / ISO 27001 attribution (those belong to the DeepInfra
+    sub-processor, not Cogny AB); recorded that the documented REST host
+    api.cogny.com returns Cloudflare 521 while the MCP surface is healthy.
