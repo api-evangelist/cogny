@@ -1,0 +1,88 @@
+generated: '2026-08-13'
+method: searched
+source: https://cogny.com/docs/api-overview-authentication
+docs: https://cogny.com/docs/api-overview-authentication
+also: https://cogny.com/pricing
+limit_count: 4
+checked: '2026-08-13'
+summary: >-
+  Cogny documents three named REST rate-limit tiers on its API overview page and
+  meters the MCP surface separately, in tool calls per month, on the pricing page.
+  The documented tiers are numbers in prose only: Cogny publishes NO rate-limit
+  response headers, so an agent has no runtime signal and can only discover
+  exhaustion from the 429 status itself.
+limits:
+- id: rest-standard
+  surface: rest
+  scope: per-account
+  tier: Standard
+  window: 1m
+  limit: 100
+  unit: requests
+  burst: null
+  source: https://cogny.com/docs/api-overview-authentication
+- id: rest-enterprise
+  surface: rest
+  scope: per-account
+  tier: Enterprise
+  window: 1m
+  limit: 1000
+  unit: requests
+  burst: null
+  source: https://cogny.com/docs/api-overview-authentication
+- id: rest-batch
+  surface: rest
+  scope: per-endpoint
+  tier: Batch operations
+  window: 1m
+  limit: 10
+  unit: requests
+  burst: null
+  note: Applies to batch endpoints (e.g. bulkUpdateTickets, exportTickets).
+  source: https://cogny.com/docs/api-overview-authentication
+- id: mcp-free-tier
+  surface: mcp
+  scope: per-workspace
+  tier: Free
+  window: 1mo
+  limit: 15
+  unit: tool-calls
+  burst: null
+  note: >-
+    Metered MCP tool calls on the free tier, reset at the start of every month.
+    The Solo tier ($9/mo) is unmetered "under fair use" — no numeric ceiling is
+    published for it. Cloud ($499/mo) meters in 2000 AI credits per month across
+    chat, MCP calls and image generation.
+  source: https://cogny.com/pricing
+exemptions:
+- subject: sk_test_ development keys
+  note: >-
+    "Development keys access sandbox data and don't count toward rate limits."
+  source: https://cogny.com/docs/api-overview-authentication
+response_signaling:
+  headers_published: false
+  headers: []
+  ratelimit_header_standard: null
+  retry_after: null
+  status_on_exhaustion: 429
+  status_meaning: 429 Too Many Requests - Rate limit exceeded
+  error_envelope: '{ success: false, error: { code, message, details } }'
+  note: >-
+    GAP. The API overview documents 429 as the exhaustion status and documents a
+    custom error envelope, but names no X-RateLimit-*, RateLimit-* (RFC 9331) or
+    Retry-After header. Nothing in openapi/ declares rate-limit response headers
+    either. An agent therefore cannot pace itself; it can only back off after
+    being refused. This is the single highest-value runtime-semantics fix
+    available to Cogny.
+  see: conventions/cogny-conventions.yml
+live_observation:
+  attempted: true
+  url: https://api.cogny.com/v1/reports
+  http_status: 521
+  checked: '2026-08-13'
+  note: >-
+    Headers could not be observed live: the documented REST base host
+    api.cogny.com returned Cloudflare 521 (origin unreachable) on every probe on
+    the checked date, across three retries and every path tried. Recorded as a
+    probe result, not as a claim about the limits themselves — the numbers above
+    come from the published docs.

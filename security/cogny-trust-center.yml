@@ -1,0 +1,162 @@
+generated: '2026-08-13'
+method: searched
+source: https://cogny.com/security
+url: https://cogny.com/security
+checked: '2026-08-13'
+name: Cogny Security
+type: security-page
+note: >-
+  Cogny publishes a single self-hosted security page rather than a third-party
+  trust portal (no Vanta/Drata/SafeBase surface, no trust.cogny.com — probed,
+  404). The page is substantive: encryption posture, auth model, tenant
+  isolation, GDPR handling, infrastructure, a named sub-processor register, and
+  monitoring/incident response.
+attestation_correction: >-
+  IMPORTANT — a keyword probe of this page matches "SOC 2" and "ISO 27001", but
+  BOTH strings occur only inside the DeepInfra, Inc. row of the sub-processor
+  register ("Zero data-retention policy; SOC 2 and ISO 27001 certified"). They
+  describe a SUB-PROCESSOR, not Cogny AB. Cogny publishes no SOC 2 report, no
+  ISO 27001 certificate, and no PCI/HIPAA/FedRAMP claim anywhere on its public
+  surface. Recording those certifications against Cogny would be a false
+  attribution, so they are held below under third_party_certifications only.
+certifications: []
+certifications_note: >-
+  None self-attested by Cogny AB as of the checked date.
+compliance_programs:
+- id: gdpr
+  name: GDPR
+  status: claimed
+  self_attested: true
+  evidence: >-
+    Dedicated "GDPR Compliance" section — mandatory GDPR webhook endpoints
+    implemented for third-party integrations that require them (Shopify customer
+    data request, customer data erasure, shop data erasure); OAuth credentials
+    auto-deleted from the vault on integration disconnect; user-requested account
+    and warehouse deletion follow a scheduled confirm-then-purge process.
+  source: https://cogny.com/security
+- id: dpa
+  name: Data Processing Agreement
+  status: published
+  url: https://cogny.com/terms/dpa
+  http_status: 200
+  evidence: >-
+    Sub-processor contractual terms are set out in a published DPA linked from
+    the security page.
+- id: dora
+  name: DORA addendum
+  status: published
+  url: https://cogny.com/terms/dora
+  http_status: 200
+  evidence: >-
+    A DORA (EU Digital Operational Resilience Act) addendum is published in the
+    terms set — relevant to EU financial-sector customers.
+- id: eu-data-residency
+  name: EU data residency
+  status: claimed
+  self_attested: true
+  evidence: >-
+    Compute on GKE europe-west1 (Belgium); Supabase managed Postgres on AWS
+    eu-north-1 (Stockholm); Berget AI for EU-hosted inference. The single stated
+    exception is Cogny Sites, which runs on Cloud Run in the customer's own GCP
+    project and region — EU, North American and Asian regions available, fixed at
+    creation.
+  source: https://cogny.com/security
+- id: ai-training-posture
+  name: AI training posture
+  status: claimed
+  self_attested: true
+  evidence: >-
+    Both Anthropic and OpenAI rows of the sub-processor register state the
+    provider "does not train on customer content submitted via the API"; Hugging
+    Face "does not store request bodies or responses when routing"; DeepInfra
+    "zero data-retention policy".
+  source: https://cogny.com/security
+security_controls:
+  encryption_in_transit: TLS (HTTPS) for all data, including service-to-service
+  encryption_at_rest: Supabase-encrypted database; OAuth tokens in Supabase Vault
+  authentication: Supabase Auth (email/password + social login)
+  third_party_oauth: OAuth 2.0 with HMAC signature verification on callbacks and webhooks
+  tenant_isolation: >-
+    Postgres Row-Level Security on all tables, scoped to the authenticated user's
+    warehouse; stated that cross-tenant access is not possible at the DB layer.
+  secret_handling: >-
+    Access and refresh tokens stored in Supabase Vault; stated never written to
+    application logs, client-side storage, or source code.
+  ddos_waf: Cloudflare edge CDN, WAF and DDoS mitigation in front of all public endpoints
+  ci_cd: Google Cloud Build with container image scanning
+  monitoring: >-
+    Real-time monitoring of application errors, tool-execution failures and
+    security-relevant events, alerting engineering via Slack.
+documents:
+- name: Cogny Security Brief (PDF)
+  description: >-
+    A single vendor-review overview — company identity, data handling, storage
+    and retention, sub-processors, AI-training posture, and MCP connector
+    security. Offered as a download on the security page.
+  url: null
+  note: >-
+    No stable public PDF URL is exposed in the page markup (probed
+    /security-brief.pdf -> 404); the download appears to be generated or gated
+    behind the page. Recorded as published-but-not-directly-addressable.
+sub_processors:
+  register_published: true
+  source: https://cogny.com/security
+  count: 13
+  entries:
+  - name: Google Cloud (Google LLC / Google Cloud EMEA Ltd.)
+    purpose: Compute (GKE), BigQuery, object storage, build and deploy, Google-integration OAuth
+    location: europe-west1 (Belgium); hosted sites in customer-selected region
+  - name: Supabase, Inc.
+    purpose: Managed PostgreSQL, authentication, encrypted secret vault, point-in-time recovery
+    location: AWS eu-north-1 (Stockholm)
+  - name: Cloudflare, Inc.
+    purpose: Edge CDN, WAF, DDoS mitigation, TLS termination
+    location: Global edge
+    note: No personal data persisted at the edge
+  - name: Anthropic PBC
+    purpose: LLM inference (Claude) for AI reports and chat
+    location: Global routing
+  - name: OpenAI, L.L.C.
+    purpose: LLM inference (GPT models) for AI reports and chat
+    location: US + SCCs
+  - name: Berget AI
+    purpose: EU-hosted AI model inference
+    location: EU (Sweden)
+  - name: Hugging Face, Inc.
+    purpose: Inference routing for open-weights LLMs
+    location: US + SCCs
+  - name: DeepInfra, Inc.
+    purpose: LLM inference (DeepSeek open-weights) via Hugging Face routing
+    location: US + SCCs
+    third_party_certifications:
+    - SOC 2
+    - ISO 27001
+    note: >-
+      These certifications belong to DeepInfra, the sub-processor — NOT to Cogny.
+      See attestation_correction above.
+  - name: Brave Software, Inc. (Brave Search)
+    purpose: Web search, news, and rank-check data for AI research tools
+    location: US + SCCs
+  - name: Stripe Payments Europe, Ltd.
+    purpose: Subscription billing and payment processing
+    location: EU + SCCs
+  - name: Resend, Inc.
+    purpose: Transactional email (report and auth emails)
+    location: SCCs
+  - name: Slack Technologies, LLC
+    purpose: Internal alerting and optional customer notifications
+    location: SCCs
+  - name: ElevenLabs Inc.
+    purpose: Optional text-to-speech, invoked only when audio features are used
+    location: SCCs
+legal_entity:
+  name: Cogny AB
+  address: Peter Myndes Backe 16, 118 46 Stockholm, Sweden
+  jurisdiction: SE
+related:
+- https://cogny.com/privacy
+- https://cogny.com/terms
+- https://cogny.com/terms/dpa
+- https://cogny.com/terms/dora
+- https://cogny.com/cookies
+last_updated_by_provider: 'March, 2026'

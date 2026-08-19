@@ -1,0 +1,231 @@
+generated: '2026-08-13'
+method: searched
+source: https://github.com/cognyai/claude-code-marketing-skills
+checked: '2026-08-13'
+publisher: Cogny AB
+repository:
+  url: https://github.com/cognyai/claude-code-marketing-skills
+  description: >-
+    Marketing skills for Claude Code — SEO audits and implementation, ad
+    analysis, ad optimization. Free skills need no account. $9/mo for live
+    Search Console, Bing & LinkedIn data.
+  default_branch: main
+  last_pushed: '2026-06-16'
+  stars: 90
+  topics: [agent-skills, ai-agents, claude-code, claude-skills, cursor, geo, growth-hacking, llm, marketing, mcp, seo, windsurf]
+  license: null
+  license_note: >-
+    No LICENSE file is present in the repository as of the checked date. The
+    skills are publicly readable and the README invites copying them, but no
+    explicit grant is published. Recorded as an honest gap, not as permissive.
+summary: >-
+  Cogny publishes 53 Agent Skills in a public GitHub repository — a first-party
+  Agent Skill library, not skills this pipeline authored. This is the strongest
+  agent-surface artifact Cogny ships after the MCP server itself: the skills are
+  the packaged operating instructions that drive Cogny's ~50 MCP tools, and a
+  meaningful subset run with no Cogny account at all.
+skill_count: 53
+tiering:
+  model: free-and-premium
+  free: >-
+    Roughly half the library runs on web search and public data with no Cogny
+    account — the reference skills (GA4 BigQuery schema, GA4 events, GTM setup,
+    GAQL, UTM, structured data, Core Web Vitals, Google Ads Scripts, Meta CAPI)
+    plus the generative ones (ad copy, landing-page review, competitor analysis,
+    lead qualification, welcome series, PMax launch kit).
+  premium: >-
+    The audit and monitor skills bind to live channel data through the Cogny MCP
+    server and require the $9/mo Solo tier (Search Console, Bing, LinkedIn Ads,
+    Google Ads, Meta Ads, GA4, GTM, HubSpot, ESPs).
+  source: https://github.com/cognyai/claude-code-marketing-skills#readme
+install:
+  one_liner: curl -sSL https://raw.githubusercontent.com/cognyai/claude-code-marketing-skills/main/install.sh | bash
+  manual_claude_code: cp -r claude-code-marketing-skills/skills/* .claude/skills/
+  manual_codex: cp -r claude-code-marketing-skills/skills/* "${CODEX_HOME:-$HOME/.codex}/skills/"
+  targets: [Claude Code, Cursor, Windsurf, Codex]
+  mcp_wiring:
+    file: .mcp.json.example
+    config: '{"mcpServers":{"cogny":{"type":"http","url":"https://app.cogny.com/mcp"}}}'
+    note: >-
+      The repo ships an .mcp.json.example that wires the remote Cogny MCP server
+      by URL — consistent with mcp/cogny-mcp.yml deployment.mode = remote.
+structure:
+  skills_dir: skills/
+  pipeline_dir: skill-pipeline/
+  pipeline_note: >-
+    skill-pipeline/ holds two chained audit skills (google-ads-audit,
+    meta-ads-audit) that are staged variants of the same-named skills in skills/.
+related:
+- skills/_index.yml
+- skills/cogny-SKILL.md
+- mcp/cogny-mcp.yml
+- mcp/cogny-tool-crosswalk.yml
+- cli/cogny-cli.yml
+note: >-
+  This is an INDEX of skills Cogny publishes on its own GitHub organization. The
+  SKILL.md bodies are not vendored here — they are the provider's to version.
+  Names and descriptions below are read verbatim from each file's frontmatter.
+skills:
+  - name: ad-copy-writer
+    path: skills/ad-copy-writer/SKILL.md
+    description: "Generate ad copy variations for Google, Meta, and LinkedIn Ads"
+  - name: brand-kit
+    path: skills/brand-kit/SKILL.md
+    description: "Build a portable brand-kit.json for the user's product — colors, typography, voice — that other skills (video, ad creative, landing page) can consume. Multiple discovery paths so it works whether the user has access to their site's source code or only a public URL or just a logo image."
+    references: [extract-palette.sh]
+  - name: cogny
+    path: skills/cogny/SKILL.md
+    description: "Run Cogny marketing analysis tasks — fetch scheduled tasks, analyze ad accounts via MCP, report findings"
+  - name: community-pulse
+    path: skills/community-pulse/SKILL.md
+    description: "Weekly read on Discord community health — joins, active channels, top contributors, themes, and unanswered questions"
+  - name: competitor-analysis
+    path: skills/competitor-analysis/SKILL.md
+    description: "Research competitor positioning, ads, pricing, and market gaps"
+  - name: conversion-debug
+    path: skills/conversion-debug/SKILL.md
+    description: "Conversion Tracking Debugger — diagnose discrepancies across GTM, GA4, Google Ads & Meta Pixel with live API access, BigQuery validation queries, and troubleshooting flowcharts"
+  - name: crm-icp-analysis
+    path: skills/crm-icp-analysis/SKILL.md
+    description: "Analyze HubSpot CRM data to build a data-driven Ideal Customer Profile from closed-won deals, contacts, and companies"
+  - name: crm-sales-momentum
+    path: skills/crm-sales-momentum/SKILL.md
+    description: "Analyze HubSpot pipeline momentum — deal velocity, stage conversions, win/loss patterns, and stall detection"
+  - name: cwv-audit
+    path: skills/cwv-audit/SKILL.md
+    description: "Core Web Vitals Reference — LCP, INP, CLS thresholds, root causes, optimization fixes, CrUX BigQuery queries, web-vitals library usage, and SEO impact"
+  - name: deliverability-check
+    path: skills/deliverability-check/SKILL.md
+    description: "Audit a sending domain's deliverability — SPF, DKIM, DMARC, MX, BIMI, blocklists — with a prioritized fix order"
+  - name: demand-gen-audit
+    path: skills/demand-gen-audit/SKILL.md
+    description: "Google Ads Demand Gen audit — audience strategy, creative format diversity, creative freshness, placements, CPA vs goal"
+  - name: drop-off-rescue
+    path: skills/drop-off-rescue/SKILL.md
+    description: "Find contacts stalled at funnel stages (abandoned cart, signed-up-but-no-trial, trial-but-no-convert), draft stage-appropriate re-engagement emails, and schedule sends via your ESP — with dedupe so weekly reruns never double-send"
+  - name: email-report
+    path: skills/email-report/SKILL.md
+    description: "Auto-generate the weekly or monthly email performance report in three formats — Slack update, CEO email, board-deck section — from real ESP data"
+  - name: ga4-audit
+    path: skills/ga4-audit/SKILL.md
+    description: "Google Analytics 4 configuration and data-quality audit — key events, data streams, custom dimensions, attribution, retention, PII, Ads link, BigQuery export"
+  - name: ga4-bigquery-schema
+    path: skills/ga4-bigquery-schema/SKILL.md
+    description: "GA4 BigQuery Export Schema Reference — complete field reference, nested structures, query patterns, and performance tips"
+  - name: ga4-events
+    path: skills/ga4-events/SKILL.md
+    description: "GA4 Event Implementation Reference — complete event taxonomy, parameter lists, implementation patterns (gtag.js, GTM, Measurement Protocol), and validation techniques"
+  - name: ga4-measurement-plan
+    path: skills/ga4-measurement-plan/SKILL.md
+    description: "Build a GA4 measurement plan from a site URL — event taxonomy, parameters, custom dimensions, and key events to mark as conversions"
+  - name: ga4-monitor
+    path: skills/ga4-monitor/SKILL.md
+    description: "Weekly GA4 check — sessions, users, key-event conversions, revenue, channel mix — with week-over-week deltas and tracking-break alerts"
+  - name: gaql-reference
+    path: skills/gaql-reference/SKILL.md
+    description: "Google Ads Query Language (GAQL) Reference — complete syntax, resource types, fields, operators, date macros, and ready-to-use query patterns"
+  - name: google-ads-audit
+    path: skills/google-ads-audit/SKILL.md
+    description: "Comprehensive Google Ads account audit — campaign structure, budget pacing, conversion tracking, wasted spend — across every campaign type, ranked by estimated $ impact"
+  - name: google-ads-monitor
+    path: skills/google-ads-monitor/SKILL.md
+    description: "Weekly Google Ads health check — budget pacing, spend spikes, disapproved ads, conversion-tracking breaks, CPA/ROAS swings — with week-over-week deltas"
+  - name: google-ads-scripts
+    path: skills/google-ads-scripts/SKILL.md
+    description: "Google Ads Scripts Reference — JavaScript automation, AdsApp object model, selectors, GAQL queries, 10+ working script patterns, MCC parallel processing, Sheets integration"
+  - name: gtm-audit
+    path: skills/gtm-audit/SKILL.md
+    description: "Google Tag Manager container audit — tag health, orphaned and paused tags, duplicate GA4 config, trigger coverage, Consent Mode, naming, workspace hygiene"
+  - name: gtm-monitor
+    path: skills/gtm-monitor/SKILL.md
+    description: "Weekly GTM container check — new, edited and removed tags, unpublished draft changes, orphaned tags, workspace status — diffed week-over-week"
+  - name: gtm-setup
+    path: skills/gtm-setup/SKILL.md
+    description: "GTM Event Tracking & Setup Reference — dataLayer fundamentals, trigger types, variable types, GA4 tag configuration, debug mode, and best practices"
+  - name: gtm-tracking-plan
+    path: skills/gtm-tracking-plan/SKILL.md
+    description: "Turn a measurement plan into a Google Tag Manager spec — tags, triggers, variables, and copy-paste dataLayer snippets for every event"
+  - name: landing-page-review
+    path: skills/landing-page-review/SKILL.md
+    description: "CRO review of a landing page with specific conversion recommendations"
+  - name: lead-qualification
+    path: skills/lead-qualification/SKILL.md
+    description: "Research and qualify business leads against your ICP"
+  - name: linkedin-ads-audit
+    path: skills/linkedin-ads-audit/SKILL.md
+    description: "Full LinkedIn Ads account audit — campaign structure, targeting, creative performance, spend efficiency"
+  - name: linkedin-launch-video
+    path: skills/linkedin-launch-video/SKILL.md
+    description: "Produce a LinkedIn-native 1:1 (or 16:9) launch video using HyperFrames. Caption-first, sound-off, B2B register, anti-corporate-jargon. Optionally hand off to LinkedIn Ads to launch as a sponsored content campaign with ICP-aligned targeting."
+    references: [brand-identity.md, composition-template.html]
+  - name: linkedin-micro-campaigns
+    path: skills/linkedin-micro-campaigns/SKILL.md
+    description: "Create precision-targeted LinkedIn ad campaigns for specific ICP segments — translates CRM data to LinkedIn targeting"
+  - name: meta-capi
+    path: skills/meta-capi/SKILL.md
+    description: "Meta Conversions API (CAPI) Setup Reference — architecture, event types, customer information hashing, deduplication, implementation examples, AEM, and testing"
+  - name: non-commodity-content
+    path: skills/non-commodity-content/SKILL.md
+    description: "Interview the user for specific client stories, anecdotes, refusals, and real numbers — then turn them into non-commodity SEO content Google actually wants to rank. Kills generic listicle output at the source."
+  - name: pmax-audit
+    path: skills/pmax-audit/SKILL.md
+    description: "Performance Max campaign audit — asset group strength, asset coverage, search themes, audience signals, brand exclusions, channel distribution"
+  - name: pmax-launch-kit
+    path: skills/pmax-launch-kit/SKILL.md
+    description: "Build a complete Performance Max campaign from a brand URL — asset group copy, search themes, audience signals, image/video shot list, settings — ready to paste into Google Ads"
+  - name: pre-send-qa
+    path: skills/pre-send-qa/SKILL.md
+    description: "Pre-flight QA for an email campaign — merge tags, broken links, spam triggers, compliance, mobile rendering — before you hit send"
+  - name: reddit-launch-video
+    path: skills/reddit-launch-video/SKILL.md
+    description: "Produce a Reddit-native 1:1 or 4:5 launch video using HyperFrames. Idiomatic Reddit feel — text-first, low-polish, sound-off, subreddit-aware. Optionally hand off to Reddit Ads to launch as a promoted post targeted to specific subreddits."
+    references: [brand-identity.md, composition-template.html]
+  - name: revenue-audit
+    path: skills/revenue-audit/SKILL.md
+    description: "Audit an email marketing program for revenue leaks — missing flows, dormant high-value subscribers, under-segmentation, promo gaps, stale automations — ranked by estimated $ impact"
+  - name: search-campaign-audit
+    path: skills/search-campaign-audit/SKILL.md
+    description: "Google Ads Search campaign audit — match types, quality score, negative keyword gaps, search terms, ad strength, RSA asset coverage"
+  - name: seo-audit
+    path: skills/seo-audit/SKILL.md
+    description: "Full technical + content SEO analysis — uses live Search Console + Bing data when connected"
+  - name: seo-monitor
+    path: skills/seo-monitor/SKILL.md
+    description: "Monitor SEO rankings, queries, and indexing via Search Console MCP"
+  - name: shopping-campaign-audit
+    path: skills/shopping-campaign-audit/SKILL.md
+    description: "Google Ads Shopping / retail audit — product feed coverage, listing-group granularity, zero-impression products, bidding, top wasted spend"
+  - name: structured-data
+    path: skills/structured-data/SKILL.md
+    description: "Schema.org Structured Data Reference — JSON-LD examples for every major schema type, rich results eligibility, testing tools, and implementation patterns"
+  - name: subject-line-lab
+    path: skills/subject-line-lab/SKILL.md
+    description: "Mine your actual subject-line history from Klaviyo / Mailchimp / Rule / Get a Newsletter, find the patterns that work for YOUR list, and generate tuned candidates"
+  - name: submit-to-agentlaunch
+    path: skills/submit-to-agentlaunch/SKILL.md
+    description: "Submit an AI agent to the agentlaunch directory and upvote agents via a public no-auth REST API"
+  - name: tiktok-launch-video
+    path: skills/tiktok-launch-video/SKILL.md
+    description: "Produce a 9:16 TikTok-native launch video for a product, feature, or campaign using HyperFrames. Idiomatic TikTok pacing, burned-in captions, hook-in-1s structure. Optionally hand off to TikTok Ads to launch as a Spark/in-feed ad."
+    references: [brand-identity.md, composition-template.html]
+  - name: utm-builder
+    path: skills/utm-builder/SKILL.md
+    description: "UTM Parameter Strategy & Builder — naming conventions, GA4 channel grouping rules, auto-tagging, common mistakes, and BigQuery validation queries"
+  - name: video-to-gif
+    path: skills/video-to-gif/SKILL.md
+    description: "Convert an MP4 (e.g. a HyperFrames render or a screen recording) to a high-quality GIF using FFmpeg's two-pass palette method. Picks the right preset for the target surface — Slack/DMs/Twitter/email/Reddit/GitHub — so you don't ship a 40MB GIF to a 5MB inbox."
+  - name: website-migration-audit
+    path: skills/website-migration-audit/SKILL.md
+    description: "Compare a production site against a staging/redesign version — SEO parity, content integrity, missing pages, and launch readiness"
+  - name: welcome-series
+    path: skills/welcome-series/SKILL.md
+    description: "Generate a full 5-email welcome series from a brand URL — subjects, preheaders, bodies, and send timing, ready to paste into any ESP"
+  - name: winback-engine
+    path: skills/winback-engine/SKILL.md
+    description: "Find dormant subscribers, segment by historical value, draft personalized winback emails per tier, and identify suppression candidates"
+  - name: google-ads-audit
+    path: skill-pipeline/google-ads-audit/SKILL.md
+    description: "Deep Google Ads account audit — keywords, quality scores, budget pacing, search terms"
+  - name: meta-ads-audit
+    path: skill-pipeline/meta-ads-audit/SKILL.md
+    description: "Meta Ads audit — audience analysis, creative fatigue, budget pacing, lead quality"

@@ -1,6 +1,14 @@
-generated: '2026-07-18'
+generated: '2026-08-13'
 method: searched
-source: https://cogny.com/SKILL.md
+source: https://cogny.com/SKILL.md + https://github.com/cognyai/claude-code-marketing-skills
+provider_published_library:
+  file: cogny-published-skills.yml
+  repository: https://github.com/cognyai/claude-code-marketing-skills
+  skill_count: 53
+  note: >-
+    Cogny publishes a 53-skill first-party Agent Skill library on GitHub. It is
+    catalogued in cogny-published-skills.yml rather than vendored here; the
+    SKILL.md bodies remain the provider's to version.
 skills:
   - file: cogny-SKILL.md
     name: Install Cogny and wire the MCP into your agent

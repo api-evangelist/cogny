@@ -1,6 +1,9 @@
-generated: '2026-07-18'
-method: derived
-source: openapi/cogny-openapi.yml + well-known/cogny-oauth-authorization-server.json
+generated: '2026-08-13'
+method: searched
+source: >-
+  openapi/_original/cogny-openapi.yml + well-known/cogny-oauth-authorization-server.json
+  + https://cogny.com/security + https://cogny.com/terms/dpa + https://cogny.com/terms/dora
+checked: '2026-08-13'
 standards:
   - id: oauth2
     conforms: true
@@ -28,4 +31,92 @@ standards:
     evidence: Uses custom { success, error{code,message,details} } envelope, not application/problem+json.
   - id: openid-connect
     conforms: false
-    evidence: No /.well-known/openid-configuration (404).
+    evidence: No /.well-known/openid-configuration (404 on cogny.com and app.cogny.com).
+  - id: auth-md
+    conforms: true
+    evidence: >-
+      Implements the auth.md agent-registration protocol
+      (https://github.com/workos/auth.md) — the 401 from app.cogny.com/mcp
+      carries a WWW-Authenticate header pointing at /auth.md, which documents the
+      discover -> register -> call -> revoke flow. Only anonymous registration is
+      wired today; the OTP claim ceremony and ID-JAG identity assertions in the
+      upstream spec are stated as not yet shipped.
+    source: https://cogny.com/auth.md
+  - id: llmstxt
+    conforms: true
+    evidence: >-
+      /llms.txt served at cogny.com per llmstxt.org, with a dated
+      "Last updated" header (2026-05-23), plus a second machine-readable tool map
+      at /cli/llms.txt enumerating all 36 connectable MCP servers.
+    source: https://cogny.com/llms.txt
+  - id: agent-skills
+    conforms: true
+    evidence: >-
+      53 Agent Skills published as SKILL.md documents with YAML frontmatter in a
+      public repo, plus a site-root /SKILL.md install manifest.
+    source: https://github.com/cognyai/claude-code-marketing-skills
+  - id: a2a
+    conforms: false
+    evidence: >-
+      No A2A Agent Card at /.well-known/agent-card.json or the legacy
+      /.well-known/agent.json on any host (404 on cogny.com and app.cogny.com;
+      api.cogny.com and docs.cogny.com unreachable, 521).
+  - id: rfc9116-security-txt
+    conforms: false
+    evidence: >-
+      No /.well-known/security.txt on any reachable host, though a security
+      contact is published in prose at https://cogny.com/security.
+  - id: rfc9331-ratelimit-headers
+    conforms: false
+    evidence: >-
+      Rate limits are documented as prose tiers only; no RateLimit-* or
+      X-RateLimit-* response headers and no Retry-After are published or declared
+      in any spec. See rate-limits/cogny-rate-limits.yml.
+  - id: rfc8594-sunset
+    conforms: false
+    evidence: No deprecation policy and no Sunset/Deprecation header support published.
+compliance:
+  published: true
+  source: https://cogny.com/security
+  note: >-
+    Cogny publishes a compliance posture but no third-party attestation. See
+    security/cogny-trust-center.yml — in particular attestation_correction,
+    which records that the SOC 2 and ISO 27001 strings on the security page
+    belong to the DeepInfra sub-processor and NOT to Cogny AB.
+  programs:
+    - id: gdpr
+      status: claimed
+      self_attested: true
+      evidence: >-
+        Dedicated GDPR Compliance section: mandatory GDPR webhook endpoints for
+        third-party integrations that require them (Shopify customer data
+        request / customer redact / shop redact), automatic deletion of OAuth
+        credentials from the vault on disconnect, and user-requested account and
+        warehouse deletion with a confirm-then-purge process.
+      source: https://cogny.com/security
+    - id: dpa
+      status: published
+      url: https://cogny.com/terms/dpa
+      evidence: A Data Processing Agreement governing sub-processor terms is published.
+    - id: dora
+      status: published
+      url: https://cogny.com/terms/dora
+      evidence: An EU DORA (Digital Operational Resilience Act) addendum is published.
+    - id: eu-data-residency
+      status: claimed
+      self_attested: true
+      evidence: >-
+        GKE europe-west1 compute, Supabase on AWS eu-north-1 (Stockholm), Berget
+        AI for EU-hosted inference; the single stated exception is Cogny Sites,
+        which runs in the customer's own selected GCP region.
+      source: https://cogny.com/security
+    - id: sub-processor-register
+      status: published
+      evidence: >-
+        A named register of 13 sub-processors with purpose and data location for
+        each, including per-provider AI-training and retention posture.
+      source: https://cogny.com/security
+  certifications: []
+  certifications_note: >-
+    Cogny AB self-attests no SOC 2, ISO 27001, PCI, HIPAA or FedRAMP. Recording
+    none is the accurate result.

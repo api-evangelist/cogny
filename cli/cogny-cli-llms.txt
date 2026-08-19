@@ -22,45 +22,49 @@ Tool names are namespaced as `mcp__<toolPrefix>__<tool>`. Connect a server, then
 
 ## Servers (36)
 
-Fields: name | slug | toolPrefix | category | example | page. The example is one real
-namespaced tool id you can pass straight to `cogny tools call`.
+Fields: name | slug | toolPrefix | category | status | example | page. The example is one
+real namespaced tool id you can pass straight to `cogny tools call`.
 
-- Google Ads | slug=google-ads | toolPrefix=Google_Ads | category=Paid Search | example=mcp__Google_Ads__tool_execute_gaql | page=https://cogny.com/cli/google-ads
-- Meta Ads | slug=meta-ads | toolPrefix=Meta_Ads | category=Paid Social | example=mcp__Meta_Ads__tool_get_insights | page=https://cogny.com/cli/meta-ads
-- Google Analytics 4 | slug=ga4 | toolPrefix=Google_Analytics_4 | category=Analytics | example=mcp__Google_Analytics_4__tool_run_report | page=https://cogny.com/cli/ga4
-- LinkedIn Ads | slug=linkedin-ads | toolPrefix=LinkedIn_Ads | category=Paid Social | example=mcp__LinkedIn_Ads__tool_get_analytics | page=https://cogny.com/cli/linkedin-ads
-- TikTok Ads | slug=tiktok-ads | toolPrefix=TikTok_Ads | category=Paid Social | example=mcp__TikTok_Ads__tool_get_insights | page=https://cogny.com/cli/tiktok-ads
-- X Ads | slug=x-ads | toolPrefix=X_Ads | category=Paid Social | example=mcp__X_Ads__tool_get_analytics | page=https://cogny.com/cli/x-ads
-- Snapchat Ads | slug=snapchat-ads | toolPrefix=Snapchat_Ads | category=Paid Social | example=mcp__Snapchat_Ads__tool_get_stats | page=https://cogny.com/cli/snapchat-ads
-- Reddit Ads | slug=reddit-ads | toolPrefix=Reddit_Ads | category=Paid Social | example=mcp__Reddit_Ads__tool_get_reporting | page=https://cogny.com/cli/reddit-ads
-- Apple Search Ads | slug=apple-search-ads | toolPrefix=Apple_Search_Ads | category=App Marketing | example=mcp__Apple_Search_Ads__tool_get_campaign_report | page=https://cogny.com/cli/apple-search-ads
-- Google Search Console | slug=search-console | toolPrefix=Google_Search_Console | category=SEO | example=mcp__Google_Search_Console__tool_get_search_analytics | page=https://cogny.com/cli/search-console
-- Google Tag Manager | slug=google-tag-manager | toolPrefix=Google_Tag_Manager | category=Analytics | example=mcp__Google_Tag_Manager__tool_list_tags | page=https://cogny.com/cli/google-tag-manager
-- Bing Webmaster Tools | slug=bing-webmaster | toolPrefix=Bing_Webmaster_Tools | category=SEO | example=mcp__Bing_Webmaster_Tools__tool_get_query_stats | page=https://cogny.com/cli/bing-webmaster
-- Plausible | slug=plausible | toolPrefix=Plausible | category=Analytics | example=mcp__Plausible__breakdown | page=https://cogny.com/cli/plausible
-- Fathom Analytics | slug=fathom | toolPrefix=Fathom_Analytics | category=Analytics | example=mcp__Fathom_Analytics__aggregate | page=https://cogny.com/cli/fathom
-- Simple Analytics | slug=simple-analytics | toolPrefix=Simple_Analytics | category=Analytics | example=mcp__Simple_Analytics__stats | page=https://cogny.com/cli/simple-analytics
-- Ahrefs | slug=ahrefs | toolPrefix=Ahrefs | category=SEO | example=mcp__Ahrefs__domain_rating | page=https://cogny.com/cli/ahrefs
-- Semrush | slug=semrush | toolPrefix=Semrush | category=SEO | example=mcp__Semrush__domain_overview | page=https://cogny.com/cli/semrush
-- Brave Search | slug=brave-search | toolPrefix=cogny-brave-search | category=Research | example=mcp__cogny-brave-search__tool_brave_search | page=https://cogny.com/cli/brave-search
-- Klaviyo | slug=klaviyo | toolPrefix=Klaviyo | category=Email | example=mcp__Klaviyo__get_campaign_values_report | page=https://cogny.com/cli/klaviyo
-- Mailchimp | slug=mailchimp | toolPrefix=Mailchimp | category=Email | example=mcp__Mailchimp__tool_get_report | page=https://cogny.com/cli/mailchimp
-- Brevo | slug=brevo | toolPrefix=Brevo | category=Email | example=mcp__Brevo__create_email_campaign | page=https://cogny.com/cli/brevo
-- MailerLite | slug=mailerlite | toolPrefix=MailerLite | category=Email | example=mcp__MailerLite__list_campaigns | page=https://cogny.com/cli/mailerlite
-- Get a Newsletter | slug=get-a-newsletter | toolPrefix=Get_a_Newsletter | category=Email | example=mcp__Get_a_Newsletter__tool_get_report | page=https://cogny.com/cli/get-a-newsletter
-- Rule | slug=rule | toolPrefix=Rule | category=Email | example=mcp__Rule__tool_get_campaign_statistics | page=https://cogny.com/cli/rule
-- Drip | slug=drip | toolPrefix=Drip | category=Email | example=mcp__Drip__list_subscribers | page=https://cogny.com/cli/drip
-- Symplify | slug=symplify | toolPrefix=Symplify | category=Email & CRO | example=mcp__Symplify__start_statistics_export | page=https://cogny.com/cli/symplify
-- Shopify | slug=shopify | toolPrefix=Shopify | category=E-commerce | example=mcp__Shopify__tool_list_orders | page=https://cogny.com/cli/shopify
-- WooCommerce | slug=woocommerce | toolPrefix=WooCommerce | category=E-commerce | example=mcp__WooCommerce__get_sales_report | page=https://cogny.com/cli/woocommerce
-- Wix | slug=wix | toolPrefix=Wix | category=E-commerce | example=mcp__Wix__get_site_analytics | page=https://cogny.com/cli/wix
-- Webflow | slug=webflow | toolPrefix=Webflow | category=CMS | example=mcp__Webflow__list_items | page=https://cogny.com/cli/webflow
-- Ghost | slug=ghost | toolPrefix=Ghost | category=CMS | example=mcp__Ghost__list_posts | page=https://cogny.com/cli/ghost
-- WordPress | slug=wordpress | toolPrefix=WordPress | category=CMS | example=mcp__WordPress__list_posts | page=https://cogny.com/cli/wordpress
-- Crisp | slug=crisp | toolPrefix=Crisp | category=Support | example=mcp__Crisp__list_conversations | page=https://cogny.com/cli/crisp
-- Discord | slug=discord | toolPrefix=Discord | category=Community | example=mcp__Discord__list_guild_channels | page=https://cogny.com/cli/discord
-- Fortnox | slug=fortnox | toolPrefix=Fortnox | category=Finance | example=mcp__Fortnox__list_invoices | page=https://cogny.com/cli/fortnox
-- Upsales | slug=upsales | toolPrefix=Upsales | category=CRM | example=mcp__Upsales__list_opportunities | page=https://cogny.com/cli/upsales
+status=live means the server is connectable today. status=coming_soon means it exists but
+cannot be connected right now — a reason= field carries why, the connect tools will refuse,
+and you should skip it rather than attempting an OAuth flow.
+
+- Google Ads | slug=google-ads | toolPrefix=Google_Ads | category=Paid Search | status=live | example=mcp__Google_Ads__tool_execute_gaql | page=https://cogny.com/cli/google-ads
+- Meta Ads | slug=meta-ads | toolPrefix=Meta_Ads | category=Paid Social | status=live | example=mcp__Meta_Ads__tool_get_insights | page=https://cogny.com/cli/meta-ads
+- Google Analytics 4 | slug=ga4 | toolPrefix=Google_Analytics_4 | category=Analytics | status=live | example=mcp__Google_Analytics_4__tool_run_report | page=https://cogny.com/cli/ga4
+- LinkedIn Ads | slug=linkedin-ads | toolPrefix=LinkedIn_Ads | category=Paid Social | status=live | example=mcp__LinkedIn_Ads__tool_get_analytics | page=https://cogny.com/cli/linkedin-ads
+- TikTok Ads | slug=tiktok-ads | toolPrefix=TikTok_Ads | category=Paid Social | status=live | example=mcp__TikTok_Ads__tool_get_insights | page=https://cogny.com/cli/tiktok-ads
+- X Ads | slug=x-ads | toolPrefix=X_Ads | category=Paid Social | status=live | example=mcp__X_Ads__tool_get_analytics | page=https://cogny.com/cli/x-ads
+- Snapchat Ads | slug=snapchat-ads | toolPrefix=Snapchat_Ads | category=Paid Social | status=live | example=mcp__Snapchat_Ads__tool_get_stats | page=https://cogny.com/cli/snapchat-ads
+- Reddit Ads | slug=reddit-ads | toolPrefix=Reddit_Ads | category=Paid Social | status=coming_soon | reason=Reddit Ads is temporarily unavailable — our Reddit Ads API access was revoked and is pending re-approval. New connections are paused until access is restored; the tools stay documented for when it returns. | example=mcp__Reddit_Ads__tool_get_reporting | page=https://cogny.com/cli/reddit-ads
+- Apple Search Ads | slug=apple-search-ads | toolPrefix=Apple_Search_Ads | category=App Marketing | status=live | example=mcp__Apple_Search_Ads__tool_get_campaign_report | page=https://cogny.com/cli/apple-search-ads
+- Google Search Console | slug=search-console | toolPrefix=Google_Search_Console | category=SEO | status=live | example=mcp__Google_Search_Console__tool_get_search_analytics | page=https://cogny.com/cli/search-console
+- Google Tag Manager | slug=google-tag-manager | toolPrefix=Google_Tag_Manager | category=Analytics | status=live | example=mcp__Google_Tag_Manager__tool_list_tags | page=https://cogny.com/cli/google-tag-manager
+- Bing Webmaster Tools | slug=bing-webmaster | toolPrefix=Bing_Webmaster_Tools | category=SEO | status=live | example=mcp__Bing_Webmaster_Tools__tool_get_query_stats | page=https://cogny.com/cli/bing-webmaster
+- Plausible | slug=plausible | toolPrefix=Plausible | category=Analytics | status=live | example=mcp__Plausible__breakdown | page=https://cogny.com/cli/plausible
+- Fathom Analytics | slug=fathom | toolPrefix=Fathom_Analytics | category=Analytics | status=live | example=mcp__Fathom_Analytics__aggregate | page=https://cogny.com/cli/fathom
+- Simple Analytics | slug=simple-analytics | toolPrefix=Simple_Analytics | category=Analytics | status=live | example=mcp__Simple_Analytics__stats | page=https://cogny.com/cli/simple-analytics
+- Ahrefs | slug=ahrefs | toolPrefix=Ahrefs | category=SEO | status=live | example=mcp__Ahrefs__domain_rating | page=https://cogny.com/cli/ahrefs
+- Semrush | slug=semrush | toolPrefix=Semrush | category=SEO | status=live | example=mcp__Semrush__domain_overview | page=https://cogny.com/cli/semrush
+- Brave Search | slug=brave-search | toolPrefix=cogny-brave-search | category=Research | status=live | example=mcp__cogny-brave-search__tool_brave_search | page=https://cogny.com/cli/brave-search
+- Klaviyo | slug=klaviyo | toolPrefix=Klaviyo | category=Email | status=live | example=mcp__Klaviyo__get_campaign_values_report | page=https://cogny.com/cli/klaviyo
+- Mailchimp | slug=mailchimp | toolPrefix=Mailchimp | category=Email | status=live | example=mcp__Mailchimp__tool_get_report | page=https://cogny.com/cli/mailchimp
+- Brevo | slug=brevo | toolPrefix=Brevo | category=Email | status=live | example=mcp__Brevo__create_email_campaign | page=https://cogny.com/cli/brevo
+- MailerLite | slug=mailerlite | toolPrefix=MailerLite | category=Email | status=live | example=mcp__MailerLite__list_campaigns | page=https://cogny.com/cli/mailerlite
+- Get a Newsletter | slug=get-a-newsletter | toolPrefix=Get_a_Newsletter | category=Email | status=live | example=mcp__Get_a_Newsletter__tool_get_report | page=https://cogny.com/cli/get-a-newsletter
+- Rule | slug=rule | toolPrefix=Rule | category=Email | status=live | example=mcp__Rule__tool_get_campaign_statistics | page=https://cogny.com/cli/rule
+- Drip | slug=drip | toolPrefix=Drip | category=Email | status=live | example=mcp__Drip__list_subscribers | page=https://cogny.com/cli/drip
+- Symplify | slug=symplify | toolPrefix=Symplify | category=Email & CRO | status=live | example=mcp__Symplify__start_statistics_export | page=https://cogny.com/cli/symplify
+- Shopify | slug=shopify | toolPrefix=Shopify | category=E-commerce | status=live | example=mcp__Shopify__tool_list_orders | page=https://cogny.com/cli/shopify
+- WooCommerce | slug=woocommerce | toolPrefix=WooCommerce | category=E-commerce | status=live | example=mcp__WooCommerce__get_sales_report | page=https://cogny.com/cli/woocommerce
+- Wix | slug=wix | toolPrefix=Wix | category=E-commerce | status=live | example=mcp__Wix__get_site_analytics | page=https://cogny.com/cli/wix
+- Webflow | slug=webflow | toolPrefix=Webflow | category=CMS | status=live | example=mcp__Webflow__list_items | page=https://cogny.com/cli/webflow
+- Ghost | slug=ghost | toolPrefix=Ghost | category=CMS | status=live | example=mcp__Ghost__list_posts | page=https://cogny.com/cli/ghost
+- WordPress | slug=wordpress | toolPrefix=WordPress | category=CMS | status=live | example=mcp__WordPress__list_posts | page=https://cogny.com/cli/wordpress
+- Crisp | slug=crisp | toolPrefix=Crisp | category=Support | status=live | example=mcp__Crisp__list_conversations | page=https://cogny.com/cli/crisp
+- Discord | slug=discord | toolPrefix=Discord | category=Community | status=live | example=mcp__Discord__list_guild_channels | page=https://cogny.com/cli/discord
+- Fortnox | slug=fortnox | toolPrefix=Fortnox | category=Finance | status=live | example=mcp__Fortnox__list_invoices | page=https://cogny.com/cli/fortnox
+- Upsales | slug=upsales | toolPrefix=Upsales | category=CRM | status=live | example=mcp__Upsales__list_opportunities | page=https://cogny.com/cli/upsales
 
 ## Links
 

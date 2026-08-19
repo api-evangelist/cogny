@@ -1,0 +1,215 @@
+generated: '2026-08-13'
+method: derived
+source: >-
+  mcp/cogny-mcp.yml + https://cogny.com/llms.txt + https://cogny.com/cli/llms.txt
+  bound against openapi/cogny-reports-api-openapi.yml,
+  openapi/cogny-tickets-api-openapi.yml,
+  openapi/cogny-warehouses-api-openapi.yml,
+  openapi/cogny-webhooks-api-openapi.yml
+checked: '2026-08-13'
+summary: >-
+  Cogny is an MCP-first provider with a much smaller REST projection. The two
+  surfaces are near-disjoint: the MCP server is where the product actually lives
+  (~50 tools spanning 36 connectable channel servers, BigQuery execution, ticket
+  workflow and a context-tree memory), while the REST API covers only report
+  generation, ticket read/update, a warehouse list and webhook registration.
+  Only 4 of 15 REST operations have any MCP counterpart, and the great majority
+  of MCP tools have no public REST equivalent at all. Anyone integrating Cogny
+  through REST alone gets a fraction of the platform.
+surfaces:
+  openapi:
+    files:
+    - openapi/cogny-reports-api-openapi.yml
+    - openapi/cogny-tickets-api-openapi.yml
+    - openapi/cogny-warehouses-api-openapi.yml
+    - openapi/cogny-webhooks-api-openapi.yml
+    base_url: https://api.cogny.com/v1
+    operations: 15
+    gated: false
+    availability_note: >-
+      The REST base host returned Cloudflare 521 (origin unreachable) on every
+      probe on 2026-08-13. The contract is published; the host did not answer.
+    provenance: >-
+      Cogny publishes no machine-readable OpenAPI (probed /openapi.json,
+      /openapi.yaml, /swagger.json, /v1/openapi.json, /api-docs, /redoc against
+      api.cogny.com, app.cogny.com, cogny.com and docs.cogny.com — all 404 or
+      521). The specs in openapi/ were transcribed by this pipeline from Cogny's
+      own published REST reference.
+  graphql:
+    endpoint: null
+    note: Cogny publishes no GraphQL surface.
+  mcp:
+    url: https://app.cogny.com/mcp
+    transport: http
+    tool_count: '~50'
+    gated: true
+    gate_evidence:
+      probe: 'POST tools/list {"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+      http_status: 401
+      body: >-
+        {"jsonrpc":"2.0","id":1,"error":{"code":-32603,"message":"Authentication
+        required. Connect via OAuth to use this MCP server."}}
+      checked: '2026-08-13'
+    schema_note: >-
+      Live tools/list is auth-gated, so real inputSchemas could not be read.
+      Tool NAMES below are taken verbatim from the provider's published
+      llms.txt and cli/llms.txt; no input schema is asserted for any MCP-native
+      tool. Where a tool binds to a REST operation, that operation's parameters
+      and requestBody in openapi/ are the only inputSchema evidence available.
+      Confidence is set accordingly.
+    naming_convention: >-
+      Channel tools are namespaced mcp__<toolPrefix>__<tool> (e.g.
+      mcp__Google_Ads__tool_execute_gaql). Core Cogny tools are unprefixed.
+crosswalk:
+- tool: list_tickets
+  category: tickets
+  rest:
+  - listTickets
+  binding: direct
+  confidence: high
+  note: >-
+    Same resource, same verb. REST adds cursor pagination
+    (limit/cursor) and status/priority/created_after filters.
+- tool: update_ticket_status
+  category: tickets
+  rest:
+  - updateTicket
+  - dismissTicket
+  binding: partial
+  confidence: medium
+  note: >-
+    The MCP tool is scoped to the status transition; REST PATCH
+    /tickets/{ticket_id} is the general update and POST
+    /tickets/{ticket_id}/dismiss is the dedicated dismiss transition. Mapped by
+    semantics — the MCP inputSchema is gated and could not be compared.
+- tool: show_report_section
+  category: warehouse
+  rest:
+  - getReportContent
+  binding: partial
+  confidence: medium
+  note: >-
+    Both return generated report content; the MCP tool addresses a section,
+    while GET /reports/{report_id}/content returns the document. No published
+    section identifier in the REST contract to bind against.
+- tool: list_integrations
+  category: warehouse
+  rest:
+  - listWarehouses
+  binding: partial
+  confidence: low
+  note: >-
+    Closest REST analogue. "Integrations" in the MCP sense are connected channel
+    servers (36 of them, per cli/llms.txt); "warehouses" in the REST sense are
+    connected data warehouses. Overlapping concepts, not the same list. Mapped
+    low deliberately.
+mcp_only:
+- tool: execute_bigquery_sql
+  reason: >-
+    Arbitrary SQL execution against the customer's BigQuery warehouse. No REST
+    query endpoint is published. This is the single most consequential
+    capability on the MCP surface and it is unreachable over REST.
+- tool: list_datasets
+  reason: BigQuery dataset enumeration; no REST equivalent.
+- tool: list_tables
+  reason: BigQuery table enumeration; no REST equivalent.
+- tool: inspect_schema
+  reason: BigQuery schema introspection; no REST equivalent.
+- tool: show_metrics
+  reason: Metric surfacing; no REST equivalent.
+- tool: show_budget
+  reason: Budget pacing; no REST equivalent.
+- tool: create_ticket
+  reason: >-
+    NOTABLE ASYMMETRY — the REST Tickets API can list, get, update, bulk-update,
+    dismiss, stat and export tickets, but has no create operation. Ticket
+    creation exists only on MCP.
+- tool: add_comment
+  reason: Ticket commenting; no REST comment resource is published.
+- tool: assign_ticket
+  reason: Ticket assignment; no REST assignment resource is published.
+- tool: link_pr_to_ticket
+  reason: >-
+    Links a pull request to a growth ticket — the coding-agent workflow hook.
+    No REST equivalent.
+- tool: browse_context_tree
+  reason: Context tree (long-term project memory) is an MCP-native surface entirely.
+- tool: read_context_node
+  reason: Context tree is MCP-native; no REST projection.
+- tool: write_context_node
+  reason: Context tree is MCP-native; no REST projection.
+- tool: search_context
+  reason: Context tree is MCP-native; no REST projection.
+- tool: cogny_status
+  reason: >-
+    Workspace capability probe, documented in llms.txt as the recommended first
+    call after registration. No REST equivalent.
+- tool: 'mcp__<toolPrefix>__tool_get_*'
+  reason: >-
+    Per-channel read tools across 36 connectable servers (Google Ads, Meta Ads,
+    GA4, Search Console, TikTok Ads, X Ads, Snapchat Ads, Apple Search Ads,
+    Google Tag Manager, Bing Webmaster, Plausible, Fathom, Simple Analytics,
+    Ahrefs, Semrush, Brave Search, Klaviyo, Mailchimp, Brevo, MailerLite, Get a
+    Newsletter, Rule, Drip, Symplify, Shopify, WooCommerce, Wix, Webflow, Ghost,
+    WordPress, Crisp, Discord, Fortnox, Upsales, and Reddit Ads which is
+    coming_soon). None of these channels is exposed over REST.
+  enumeration: cli/cogny-cli-llms.txt
+- tool: 'mcp__<toolPrefix>__tool_create_*'
+  reason: Per-channel create tools across the same 36 servers. No REST projection.
+  enumeration: cli/cogny-cli-llms.txt
+- tool: 'mcp__<toolPrefix>__tool_update_*'
+  reason: Per-channel update tools across the same 36 servers. No REST projection.
+  enumeration: cli/cogny-cli-llms.txt
+rest_only:
+- operationId: createReport
+  reason: >-
+    Report creation is a REST operation. Reports are requested conversationally
+    on the MCP/chat surface rather than through a named tool.
+- operationId: getReport
+  reason: Report status polling; no published MCP tool.
+- operationId: streamReport
+  reason: >-
+    SSE streaming of report generation. MCP has its own streaming transport, so
+    this REST operation has no tool analogue by design.
+- operationId: cancelReport
+  reason: Report cancellation; no published MCP tool.
+- operationId: listReports
+  reason: Report listing; no published MCP tool.
+- operationId: getTicket
+  reason: >-
+    Single-ticket fetch. The published MCP ticket set lists and mutates but
+    exposes no single-get tool.
+- operationId: bulkUpdateTickets
+  reason: Bulk ticket mutation; no published MCP tool.
+- operationId: getTicketStats
+  reason: Ticket statistics; no published MCP tool.
+- operationId: exportTickets
+  reason: Ticket export; no published MCP tool.
+- operationId: createWebhook
+  reason: >-
+    Webhook subscription registration is REST-only. An agent on the MCP surface
+    cannot register a callback — see asyncapi/cogny-webhooks.yml.
+- operationId: dismissTicket
+  reason: >-
+    Also referenced from update_ticket_status above as a partial binding;
+    counted here because no MCP tool is named for it directly.
+  also_bound_to: update_ticket_status
+coverage:
+  rest_operations: 15
+  mcp_tools_named: 15
+  mcp_tool_families: 3
+  mcp_tools_total_advertised: '~50'
+  bound: 4
+  mcp_only_named: 15
+  mcp_only_families: 3
+  rest_only: 11
+  rest_operations_with_a_tool: 4
+  rest_coverage_pct: 27
+  note: >-
+    bound counts crosswalk[] rows. mcp_tools_named counts individually named
+    tools in the provider's published documentation; mcp_tool_families counts
+    the three wildcard per-channel families (tool_get_*, tool_create_*,
+    tool_update_*) that expand across 36 servers and account for most of the
+    ~50 advertised tools. rest_only sums to 11 distinct operations
+    (dismissTicket is listed under rest_only but also appears as a partial
+    binding, so 15 - 4 bound = 11).

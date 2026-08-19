@@ -1,11 +1,15 @@
-generated: '2026-07-18'
+generated: '2026-08-13'
 method: searched
 source: https://registry.npmjs.org/@cogny/cli
+checked: '2026-08-13'
+package_count: 1
+official_count: 1
 packages:
   - language: javascript
     registry: npm
     name: "@cogny/cli"
     version: 0.3.0
+    published: '2026-05-22'
     url: https://www.npmjs.com/package/@cogny/cli
     install: npm install -g @cogny/cli
     repository: https://github.com/cognyai/cogny-cli
@@ -13,3 +17,44 @@ packages:
       Cogny CLI — sign up, wire your coding agent to Cogny, run marketing skills on
       your own data. Exposes every MCP tool as `cogny tools call <name>`.
     official: true
+    release_history:
+      versions_published: 2
+      versions: ['0.2.0', '0.3.0']
+      latest: 0.3.0
+      latest_published: '2026-05-22'
+    currency_note: >-
+      Read from registry.npmjs.org metadata on the checked date. Two releases
+      total; 0.3.0 is ~3 months old, which is current for a CLI of this age and
+      shows no abandonment signal.
+registries_checked:
+  - registry: npm
+    query: '@cogny/cli + text search "cogny"'
+    result: 1 package found (@cogny/cli)
+  - registry: pypi
+    query: https://pypi.org/pypi/cogny/json
+    http_status: 404
+    result: none
+  - registry: maven-central
+    result: none
+  - registry: nuget
+    result: none
+  - registry: pkg.go.dev
+    result: none
+  - registry: rubygems
+    result: none
+  - registry: packagist
+    result: none
+  - registry: crates.io
+    result: none
+gaps:
+  - id: no-language-sdks
+    detail: >-
+      Cogny publishes one npm package and it is a CLI, not a client library.
+      There is no JavaScript, Python, Go, Ruby, Java or .NET SDK for the REST API
+      or for the MCP surface. Integrators hand-roll HTTP against
+      https://api.cogny.com/v1 or drive the platform through MCP/the CLI. For an
+      agent-native provider that is a defensible posture, but it does mean the
+      sdk_count signal reflects a genuine absence rather than a discovery miss.
+related:
+  - cli/cogny-cli.yml
+  - mcp/cogny-mcp.yml

@@ -1,15 +1,98 @@
-generated: '2026-07-18'
+generated: '2026-08-13'
 method: searched
 source: https://cogny.com/docs/api-overview-authentication
+checked: '2026-08-13'
 versioning:
   scheme: uri-path
   current: v1
   base_url: https://api.cogny.com/v1
+  policy_url: null
+  note: >-
+    A version segment is present in the base path but no versioning policy,
+    version-support window, or version-negotiation header is documented.
 deprecation:
   policy_url: null
   sunset_header: null
-  note: No published deprecation policy or Sunset/Deprecation header support found.
+  deprecation_header: null
+  rfc8594: false
+  note: >-
+    No published deprecation policy and no RFC 8594 Sunset / Deprecation header
+    support found on any documented surface. No Deprecation pointer is emitted.
 sla:
   url: null
-status_page: null
+  uptime_commitment: null
+  note: >-
+    No SLA or uptime commitment is published. The pricing page differentiates
+    support tiers (Community / Priority + Discord) but commits to no response or
+    availability target.
+status_page:
+  url: null
+  probed:
+    - url: https://status.cogny.com
+      status: 521
+    - url: https://cogny.com/status
+      status: 404
+  note: >-
+    No status page. status.cogny.com resolves but the origin is unreachable
+    (Cloudflare 521), and /status 404s. No StatusPage pointer is emitted.
+changelog:
+  url: null
+  probed:
+    - url: https://cogny.com/changelog
+      status: 404
+    - url: https://cogny.com/docs/changelog
+      status: 404
+  note: >-
+    No dated changelog or release-notes page. Product news appears in the blog
+    (https://cogny.com/blog) as narrative posts, not as versioned entries, so no
+    changelog/ artifact and no ChangeLog pointer is written. The one dated
+    machine-readable currency signal Cogny publishes is the
+    "# Last updated: 2026-05-23" line in llms.txt.
 deprecated_operations: []
+deprecated_capabilities:
+  - id: reddit-ads-server
+    surface: mcp
+    status: coming_soon
+    detail: >-
+      The Reddit Ads MCP server is documented but not connectable. Cogny states
+      its Reddit Ads API access was revoked and is pending re-approval; new
+      connections are paused and the connect tools refuse, while the tool
+      documentation is deliberately retained for when access returns.
+    source: https://cogny.com/cli/llms.txt
+    note: >-
+      Worth recording as a lifecycle signal in its own right: this is a rare
+      example of a provider publishing a machine-readable status=coming_soon +
+      reason= field so an agent can skip a surface instead of failing an OAuth
+      flow against it.
+availability_probe:
+  checked: '2026-08-13'
+  finding: rest-origin-unreachable
+  detail: >-
+    The documented REST base host api.cogny.com returned Cloudflare 521 (origin
+    unreachable) on every request on the checked date — /v1/reports, every
+    spec-discovery path, and every /.well-known/ path, across three retries.
+    DNS resolves to Cloudflare (104.21.95.79 / 172.67.169.223) and TLS
+    terminates fine (TLSv1.3, cert valid to 2026-10-30), so this is an origin
+    outage or a decommissioned backend behind a live edge, not a DNS or
+    certificate problem. app.cogny.com (the MCP surface) and cogny.com (docs,
+    llms.txt, SKILL.md, auth.md) were healthy throughout the same run.
+  interpretation: >-
+    Recorded as an observation, not a verdict. It is consistent with Cogny having
+    shifted its integration story to MCP-first — the MCP server, CLI, llms.txt
+    and 53-skill library are all live and recently updated, while the REST API
+    reference page is dated Feb 3, 2025 and its host does not answer. Confirming
+    whether the REST API is retired is a question for the provider.
+  evidence:
+    - url: https://api.cogny.com/v1/reports
+      status: 521
+    - url: https://api.cogny.com/openapi.json
+      status: 521
+    - url: https://app.cogny.com/mcp
+      status: 401
+      note: healthy — auth challenge, not an outage
+    - url: https://cogny.com/llms.txt
+      status: 200
+related:
+  - conventions/cogny-conventions.yml
+  - rate-limits/cogny-rate-limits.yml
+  - mcp/cogny-mcp.yml

@@ -1,0 +1,39 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Cogny Reports Warehouses API",
+    "version": "1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Warehouses",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List connected warehouses",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cogny.com/v1/warehouses",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List connected warehouses"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

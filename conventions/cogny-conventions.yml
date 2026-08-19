@@ -32,6 +32,14 @@ rate_limiting:
   enterprise_tier: 1000 req/min
   batch_operations: 10 req/min
   exceeded_code: 429
+  headers_published: false
+  headers: []
+  retry_after: null
+  note: >-
+    Limits are prose numbers only — no RateLimit-* / X-RateLimit-* headers and no
+    Retry-After are published or declared in any spec, so an agent cannot pace
+    itself and can only back off after a 429.
+  see: rate-limits/cogny-rate-limits.yml
 streaming:
   protocol: server-sent-events
   endpoint: GET /v1/reports/{report_id}/stream
@@ -40,6 +48,27 @@ versioning:
   scheme: uri-path
   current: v1
   base_url: https://api.cogny.com/v1
+request_tracing:
+  supported: true
+  field: meta.request_id
+  header: null
+  example: req_abc123
+  note: >-
+    Every documented success and error envelope carries meta.timestamp and
+    meta.request_id, so a caller can quote an id to support. It is a response
+    BODY field, not a header, and there is no client-supplied correlation id.
+  source: https://cogny.com/docs/api-overview-authentication
 idempotency:
   supported: false
-  note: No idempotency-key header is documented in the public API reference.
+  header: null
+  scope: null
+  retention: null
+  note: >-
+    No Idempotency-Key header (or any equivalent) is documented in the public API
+    reference, and none of the four unsafe operations — createReport,
+    createWebhook, bulkUpdateTickets, exportTickets — declares one. Retrying a
+    createReport after a timeout can therefore generate a duplicate report.
+    Because idempotency is genuinely absent, NO `type: Idempotency` pointer is
+    emitted in apis.yml; emitting one would credit Cogny with a guarantee it does
+    not make.
+  checked: '2026-08-13'

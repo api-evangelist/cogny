@@ -1,5 +1,12 @@
-generated: '2026-07-18'
+generated: '2026-08-13'
 method: searched
+checked: '2026-08-13'
+summary: >-
+  Two OAuth discovery documents are served (both on app.cogny.com, one mirrored
+  on cogny.com); every other /.well-known/ path 404s on every host. Cogny's real
+  agent-discovery surface lives at the site ROOT rather than under /.well-known/
+  — llms.txt, SKILL.md, auth.md and cli/llms.txt — which is where the auth.md
+  protocol points a 401'd MCP client.
 hosts:
   - host: https://cogny.com
     documents:
@@ -14,6 +21,10 @@ hosts:
         status: 404
       - path: /.well-known/ai-plugin.json
         status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
   - host: https://app.cogny.com
     documents:
       - path: /.well-known/oauth-authorization-server
@@ -22,11 +33,53 @@ hosts:
       - path: /.well-known/oauth-protected-resource
         status: 200
         file: cogny-app-oauth-protected-resource.json
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://api.cogny.com
+    unreachable: true
+    documents:
+      - path: /.well-known/security.txt
+        status: 521
+      - path: /.well-known/openid-configuration
+        status: 521
+      - path: /.well-known/api-catalog
+        status: 521
+      - path: /.well-known/ai-plugin.json
+        status: 521
+      - path: /.well-known/agent-card.json
+        status: 521
+      - path: /.well-known/agent.json
+        status: 521
+    note: >-
+      Cloudflare 521 (origin unreachable) on every path, across retries. Nothing
+      can be concluded about what this host would serve.
+  - host: https://docs.cogny.com
+    unreachable: true
+    documents:
+      - path: /.well-known/security.txt
+        status: 521
+      - path: /.well-known/agent-card.json
+        status: 521
+      - path: /.well-known/agent.json
+        status: 521
+    note: >-
+      Cloudflare 521. Documentation is served from cogny.com/docs, not this host.
 agent_surfaces:
   # Machine-readable agent-native files published at the site root (not under /.well-known/).
   - path: /llms.txt
     status: 200
     file: ../llms/cogny-llms.txt
+    provider_last_updated: '2026-05-23'
   - path: /SKILL.md
     status: 200
     file: ../skills/cogny-SKILL.md
@@ -36,3 +89,18 @@ agent_surfaces:
   - path: /cli/llms.txt
     status: 200
     file: ../cli/cogny-cli-llms.txt
+agent_card:
+  found: false
+  note: >-
+    No A2A Agent Card on any host at either the canonical
+    /.well-known/agent-card.json or the legacy /.well-known/agent.json path. The
+    404s are real 404s — cogny.com is a Next.js app that returns a genuine 404
+    status for unknown paths rather than an SPA catch-all 200, so this is a
+    trustworthy negative. No a2a/ artifact and no AgentCard pointer is written.
+security_txt:
+  found: false
+  note: >-
+    No RFC 9116 security.txt on any reachable host. Cogny does publish a security
+    contact (privacy@cogny.com) on https://cogny.com/security — see
+    security/cogny-vulnerability-disclosure.yml. No SecurityTxt pointer is
+    written because no document is served.

@@ -115,9 +115,9 @@ Contact: https://cogny.com/agent-economy (agent intake form)
 
 Cogny offers three pricing options:
 
-- **Solo** (free, then $9/month): 15 MCP calls/month at no cost; upgrade to $9/mo unmetered when you outgrow it. Prompt-driven AI marketing through your coding agent (Claude Code, Codex, Cursor, etc.). All current + future skills. Community support.
-- **Cloud** ($530/month): All channels in parallel. Scheduled jobs, daily briefs, shared team workspace, organisational memory, custom report templates, Truth Ledger, priority support + Slack channel.
-- **Outcomes** (quoted per engagement): Outcome-based pricing — you define a business objective (e.g., reduce CPL by 30%, achieve 5x ROAS, rank for target keywords), Cogny quotes a price for delivering it. Full platform + dedicated AI ops + founder-led strategy. Pay for results, not tools.
+- **Free** ($0): 15 metered MCP calls/month, resetting every month, plus a one-time gift of 10 chat credits on your first workspace for in-app chat and image generation. The two allowances are separate buckets, so chatting never burns the monthly MCP calls. Both stop when empty — nothing is charged automatically. No credit card.
+- **Solo** ($9/month): Unmetered MCP calls under fair use — prompt-driven AI marketing through your own coding agent (Claude Code, Codex, Cursor, etc.), which pays for its own inference. In-app chat and image generation run on top-up credits. All current + future skills. Community support.
+- **Cloud** ($499/month): 2000 AI credits included each month, covering chat, MCP calls and image generation. All channels in parallel. Scheduled jobs, daily briefs, shared team workspace, organisational memory, custom report templates, Truth Ledger, priority support + Discord channel. Top-up credits roll over.
 
 All options include human-in-the-loop approval flow and full audit trail.
 
@@ -128,7 +128,6 @@ Sign up paths:
 - **Human (browser)**: https://cogny.com/auth/signup — sign up, follow the 15-min video guide, connect channels.
 
 Compare plans: https://cogny.com/pricing
-Outcome-based pricing: https://cogny.com/outcome-based-pricing
 
 ---
 
@@ -269,7 +268,6 @@ MCP marketing overview: https://cogny.com/mcp-marketing
 - Agent intake form: https://cogny.com/agent-economy
 - Twitter/X: https://x.com/cognyai
 - Pricing: https://cogny.com/pricing
-- Outcome-based pricing: https://cogny.com/outcome-based-pricing
 - How it works: https://cogny.com/how
 - Coding Agent: https://cogny.com/coding-agent
 - B2B Pipeline: https://cogny.com/b2b-marketing-pipeline

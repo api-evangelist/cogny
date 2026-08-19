@@ -1,0 +1,103 @@
+generated: '2026-08-13'
+method: searched
+source: https://cogny.com/pricing
+docs: https://cogny.com/pricing
+corroborated_by: https://cogny.com/llms.txt
+currency: USD
+billing_period: month
+plan_count: 3
+notes: >-
+  Cogny publishes three self-serve tiers on a single public pricing page, all
+  priced in USD per month. The Free tier is metered in MCP tool calls rather
+  than API requests, which is the natural unit for an MCP-native provider.
+  A prior round of this repo recorded an "Outcomes" (quoted per engagement)
+  tier and a $530 Cloud price from an older llms.txt; the live 2026-05-23
+  llms.txt and the live pricing page both now show Free / Solo $9 / Cloud $499
+  with no Outcomes tier, and https://cogny.com/outcome-based-pricing no longer
+  appears in the published surface. Recorded as of the checked date below.
+checked: '2026-08-13'
+plans:
+- name: Free
+  price: 0
+  currency: USD
+  billing_period: month
+  label: START HERE
+  card_required: false
+  included:
+    mcp_calls_per_month: 15
+    mcp_calls_reset: monthly
+    chat_credits: 10
+    chat_credits_grant: one-time-at-signup-first-workspace
+  quota_note: >-
+    Two separate allowances that cannot cannibalise each other — 15 metered MCP
+    tool calls per month (recurring), plus a one-time grant of 10 chat credits
+    for in-app chat and image generation on the first workspace.
+  overage: none
+  overage_note: Both allowances stop when empty; nothing is charged automatically.
+  channels:
+  - Google Search Console
+  - Google Ads
+  - GA4
+  - Meta Ads
+  - Bing
+  clients:
+  - Claude
+  - ChatGPT
+  - Cursor
+  - Cogny CLI
+  support: Community
+  signup: https://cogny.com/auth/signup
+- name: Solo
+  price: 9
+  currency: USD
+  billing_period: month
+  label: RECOMMENDED
+  card_required: true
+  included:
+    mcp_calls_per_month: unmetered
+  quota_note: >-
+    Unmetered MCP calls under fair use. In-app chat and image generation are NOT
+    included and run on separately purchased top-up credits. One channel at a
+    time. The user's own coding agent pays for its own model inference.
+  overage: top-up-credits
+  overage_note: >-
+    Chat and image generation consume top-up credits bought separately; top-ups
+    roll over and do not expire.
+  limits:
+    parallel_channels: 1
+  features:
+  - Search Console MCP
+  - LinkedIn Ads MCP
+  - Bing Webmaster MCP
+  - All current and future skills
+  support: Community
+  signup: https://cogny.com/solo
+- name: Cloud
+  price: 499
+  currency: USD
+  billing_period: month
+  label: TEAMS
+  card_required: true
+  included:
+    ai_credits_per_month: 2000
+  quota_note: >-
+    2000 AI credits included each month, spendable across in-app chat, MCP calls
+    and image generation.
+  overage: top-up-credits
+  overage_note: Extra credits can be topped up at any time and roll over.
+  limits:
+    parallel_channels: all
+  features:
+  - All MCPs + BigQuery + image generation
+  - All channels in parallel
+  - Scheduled jobs + daily briefs
+  - Shared team workspace + org memory
+  - Custom report templates + Truth Ledger
+  support: Priority support + Discord channel
+  signup: https://cogny.com/auth/signup?intent=cloud
+  demo: https://cogny.com/demo
+all_tiers_include:
+- Human-in-the-loop approval flow
+- Full audit trail
+- All future skills
+enterprise_contact_only: false

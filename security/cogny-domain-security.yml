@@ -1,11 +1,16 @@
-generated: '2026-07-18'
+generated: '2026-08-13'
 method: probed
 source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
 hosts:
+- host: cogny.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Sep 27 15:42:53 2026 GMT
+  hsts: false
 - host: api.cogny.com
   https: true
   tls_version: TLSv1.3
-  cert_expires: Sep  1 00:40:05 2026 GMT
+  cert_expires: Oct 30 03:52:33 2026 GMT
   hsts: null
 domains:
 - domain: cogny.com
