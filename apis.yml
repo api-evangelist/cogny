@@ -87,6 +87,8 @@ apis:
   humanURL: https://cogny.com/docs/api-overview-authentication
   baseURL: https://api.cogny.com/v1
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
