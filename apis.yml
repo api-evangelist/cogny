@@ -11,6 +11,18 @@ description: >-
   handshake that issues anonymous cogny_lite_* API keys with no browser bounce, an
   @cogny/cli, a public library of 53 first-party Agent Skills, and machine-readable
   llms.txt and .well-known discovery surfaces.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: unknown
   onboarding: self-serve
