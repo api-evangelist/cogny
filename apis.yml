@@ -113,6 +113,8 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Website
+  url: https://www.cogny.com/
 # --- link properties (discoverability + ergonomics) ---
 - type: DeveloperPortal
   url: https://cogny.com/docs
