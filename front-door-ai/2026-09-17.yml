@@ -1,0 +1,30 @@
+# Front Door AI Index — cogny — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: cogny
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: www.cogny.com
+  final_host: cogny.com
+  ownership: own
+  owner: cogny
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 18
+  host_score: 18
+  density: 33.21
+  words: 542
+  tiers:
+    agentic: 4
+    core: 11
+    model: 3
+  ambiguous: 1
+  top_terms:
+    AI: 10
+    Claude: 3
+    copilot: 2
+    prompts: 2
+    LLMs: 1
+    automation: 1

@@ -64,49 +64,67 @@ connectable_servers:
   coming_soon: 1
   source: https://cogny.com/cli/llms.txt
   naming: mcp__<toolPrefix>__<tool>
-  machine_readable_status: >-
-    The tool map publishes a status= field per server (live | coming_soon) and a
-    reason= field on anything not connectable, so an agent can skip a surface
-    rather than attempting and failing an OAuth flow against it. Only Reddit Ads
-    is coming_soon, with API access stated as revoked and pending re-approval.
+  machine_readable_status: The tool map publishes a status= field per server (live | coming_soon) and
+    a reason= field on anything not connectable, so an agent can skip a surface rather than attempting
+    and failing an OAuth flow against it. Only Reddit Ads is coming_soon, with API access stated as revoked
+    and pending re-approval.
   by_category:
-    paid_search: [Google Ads]
-    paid_social: [Meta Ads, LinkedIn Ads, TikTok Ads, X Ads, Snapchat Ads, Reddit Ads]
-    app_marketing: [Apple Search Ads]
-    seo: [Google Search Console, Bing Webmaster Tools, Ahrefs, Semrush]
-    analytics: [Google Analytics 4, Google Tag Manager, Plausible, Fathom Analytics, Simple Analytics]
-    research: [Brave Search]
-    email: [Klaviyo, Mailchimp, Brevo, MailerLite, Get a Newsletter, Rule, Drip]
-    email_cro: [Symplify]
-    ecommerce: [Shopify, WooCommerce, Wix]
-    cms: [Webflow, Ghost, WordPress]
-    support: [Crisp]
-    community: [Discord]
-    finance: [Fortnox]
-    crm: [Upsales]
+    paid_search:
+    - Google Ads
+    paid_social:
+    - Meta Ads
+    - LinkedIn Ads
+    - TikTok Ads
+    - X Ads
+    - Snapchat Ads
+    - Reddit Ads
+    app_marketing:
+    - Apple Search Ads
+    seo:
+    - Google Search Console
+    - Bing Webmaster Tools
+    - Ahrefs
+    - Semrush
+    analytics:
+    - Google Analytics 4
+    - Google Tag Manager
+    - Plausible
+    - Fathom Analytics
+    - Simple Analytics
+    research:
+    - Brave Search
+    email:
+    - Klaviyo
+    - Mailchimp
+    - Brevo
+    - MailerLite
+    - Get a Newsletter
+    - Rule
+    - Drip
+    email_cro:
+    - Symplify
+    ecommerce:
+    - Shopify
+    - WooCommerce
+    - Wix
+    cms:
+    - Webflow
+    - Ghost
+    - WordPress
+    support:
+    - Crisp
+    community:
+    - Discord
+    finance:
+    - Fortnox
+    crm:
+    - Upsales
 deployment:
   mode: remote
   endpoint: https://app.cogny.com/mcp
-  auth: oauth
-  install: null
-  package: null
   verified: probed
   probe: gated
-  checked: '2026-08-13'
-  source: live tools/list probe
-  evidence:
-    request: 'POST https://app.cogny.com/mcp {"jsonrpc":"2.0","id":1,"method":"tools/list"}'
-    http_status: 401
-    body: >-
-      {"jsonrpc":"2.0","id":1,"error":{"code":-32603,"message":"Authentication
-      required. Connect via OAuth to use this MCP server."}}
-  note: >-
-    Remote-only: an MCP client POSTs directly to the hosted endpoint. There is no
-    stdio package — @cogny/cli is a CLI wrapper over the same remote server
-    (cogny-mcp-proxy), not a locally-run MCP server, so mode stays `remote`. The
-    repository https://github.com/cognyai/claude-code-marketing-skills ships an
-    .mcp.json.example that wires the endpoint by URL, confirming the remote shape.
-    Live tools/list is auth-gated, so real inputSchemas could not be read; the
-    tool names above come from the provider's published llms.txt.
+  checked: '2026-08-12'
+  source: catalog MCP census
 crosswalk: mcp/cogny-tool-crosswalk.yml
 skills: skills/cogny-published-skills.yml

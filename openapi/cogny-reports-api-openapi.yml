@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: Cogny Reports API
   version: '1'
@@ -238,7 +238,142 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  responses:
+    BadRequest:
+      description: Invalid request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: API key lacks required scope.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RateLimited:
+      description: Rate limit exceeded.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
+    ReportContent:
+      type: object
+      properties:
+        report_id:
+          type: string
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              content:
+                type: string
+              insights:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Insight'
+              visualizations:
+                type: array
+                items:
+                  type: object
+              queries:
+                type: array
+                items:
+                  type: object
+        recommendations:
+          type: array
+          items:
+            type: object
+            properties:
+              priority:
+                type: string
+                enum:
+                - high
+                - medium
+                - low
+              title:
+                type: string
+              description:
+                type: string
+              estimated_impact:
+                type: string
+              effort:
+                type: string
+              action_items:
+                type: array
+                items:
+                  type: string
+        metadata:
+          type: object
+          properties:
+            total_queries:
+              type: integer
+            total_insights:
+              type: integer
+            generation_time_seconds:
+              type: number
+    Report:
+      type: object
+      properties:
+        id:
+          type: string
+        warehouse_id:
+          type: string
+        status:
+          type: string
+          enum:
+          - queued
+          - processing
+          - completed
+          - failed
+          - cancelled
+        prompt:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+        estimated_completion:
+          type: string
+          format: date-time
+        url:
+          type: string
+        stream_url:
+          type: string
+        summary:
+          type: object
+          properties:
+            total_queries:
+              type: integer
+            total_insights:
+              type: integer
+            key_findings:
+              type: array
+              items:
+                type: string
+        metadata:
+          type: object
     Insight:
       type: object
       properties:
@@ -250,6 +385,15 @@ components:
           type: number
         data:
           type: object
+    Pagination:
+      type: object
+      properties:
+        has_more:
+          type: boolean
+        next_cursor:
+          type: string
+        total_count:
+          type: integer
     CreateReportRequest:
       type: object
       required:
@@ -318,150 +462,6 @@ components:
               type: string
             details:
               type: object
-    Report:
-      type: object
-      properties:
-        id:
-          type: string
-        warehouse_id:
-          type: string
-        status:
-          type: string
-          enum:
-          - queued
-          - processing
-          - completed
-          - failed
-          - cancelled
-        prompt:
-          type: string
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
-        completed_at:
-          type: string
-          format: date-time
-        estimated_completion:
-          type: string
-          format: date-time
-        url:
-          type: string
-        stream_url:
-          type: string
-        summary:
-          type: object
-          properties:
-            total_queries:
-              type: integer
-            total_insights:
-              type: integer
-            key_findings:
-              type: array
-              items:
-                type: string
-        metadata:
-          type: object
-    ReportContent:
-      type: object
-      properties:
-        report_id:
-          type: string
-        sections:
-          type: array
-          items:
-            type: object
-            properties:
-              title:
-                type: string
-              content:
-                type: string
-              insights:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Insight'
-              visualizations:
-                type: array
-                items:
-                  type: object
-              queries:
-                type: array
-                items:
-                  type: object
-        recommendations:
-          type: array
-          items:
-            type: object
-            properties:
-              priority:
-                type: string
-                enum:
-                - high
-                - medium
-                - low
-              title:
-                type: string
-              description:
-                type: string
-              estimated_impact:
-                type: string
-              effort:
-                type: string
-              action_items:
-                type: array
-                items:
-                  type: string
-        metadata:
-          type: object
-          properties:
-            total_queries:
-              type: integer
-            total_insights:
-              type: integer
-            generation_time_seconds:
-              type: number
-    Pagination:
-      type: object
-      properties:
-        has_more:
-          type: boolean
-        next_cursor:
-          type: string
-        total_count:
-          type: integer
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Invalid request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: API key lacks required scope.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    RateLimited:
-      description: Rate limit exceeded.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http
