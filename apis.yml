@@ -75,6 +75,8 @@ apis:
   humanURL: https://cogny.com/docs/api-overview-authentication
   baseURL: https://api.cogny.com/v1
   tags:
+  - Ticketing
+  tags_raw:
   - Tickets
   properties:
   - type: OpenAPI
