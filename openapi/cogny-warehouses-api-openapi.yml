@@ -50,17 +50,6 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   schemas:
-    Warehouse:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        type:
-          type: string
-        status:
-          type: string
     Error:
       type: object
       properties:
@@ -77,6 +66,17 @@ components:
               type: string
             details:
               type: object
+    Warehouse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        status:
+          type: string
   securitySchemes:
     bearerAuth:
       type: http
