@@ -117,6 +117,8 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Pricing
+  url: https://cogny.com/pricing
 - type: CapabilityMap
   url: capabilities/cogny-capability-edges.yml
   name: Cogny Business Capability Map
