@@ -101,3 +101,29 @@ all_tiers_include:
 - Full audit trail
 - All future skills
 enterprise_contact_only: false
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - hybrid
+  - metered
+  units: []
+  plans:
+  - name: Free
+    access: other
+    model: metered
+    model_how: derived
+    units: []
+    periods: []
+  - name: Solo
+    access: other
+    model: hybrid
+    model_how: derived
+    units: []
+    periods: []
+  - name: Cloud
+    access: other
+    model: hybrid
+    model_how: derived
+    units: []
+    periods: []
