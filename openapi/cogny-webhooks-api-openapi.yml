@@ -69,14 +69,14 @@ components:
             details:
               type: object
   responses:
-    BadRequest:
-      description: Invalid request.
+    Unauthorized:
+      description: Missing or invalid API key.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API key.
+    BadRequest:
+      description: Invalid request.
       content:
         application/json:
           schema:

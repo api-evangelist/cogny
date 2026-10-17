@@ -239,26 +239,6 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
-    Insight:
-      type: object
-      properties:
-        type:
-          type: string
-        content:
-          type: string
-        confidence:
-          type: number
-        data:
-          type: object
-    Pagination:
-      type: object
-      properties:
-        has_more:
-          type: boolean
-        next_cursor:
-          type: string
-        total_count:
-          type: integer
     Error:
       type: object
       properties:
@@ -275,51 +255,16 @@ components:
               type: string
             details:
               type: object
-    Report:
+    Insight:
       type: object
       properties:
-        id:
+        type:
           type: string
-        warehouse_id:
+        content:
           type: string
-        status:
-          type: string
-          enum:
-          - queued
-          - processing
-          - completed
-          - failed
-          - cancelled
-        prompt:
-          type: string
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
-        completed_at:
-          type: string
-          format: date-time
-        estimated_completion:
-          type: string
-          format: date-time
-        url:
-          type: string
-        stream_url:
-          type: string
-        summary:
-          type: object
-          properties:
-            total_queries:
-              type: integer
-            total_insights:
-              type: integer
-            key_findings:
-              type: array
-              items:
-                type: string
-        metadata:
+        confidence:
+          type: number
+        data:
           type: object
     CreateReportRequest:
       type: object
@@ -373,6 +318,15 @@ components:
               default: en
         metadata:
           type: object
+    Pagination:
+      type: object
+      properties:
+        has_more:
+          type: boolean
+        next_cursor:
+          type: string
+        total_count:
+          type: integer
     ReportContent:
       type: object
       properties:
@@ -431,9 +385,55 @@ components:
               type: integer
             generation_time_seconds:
               type: number
+    Report:
+      type: object
+      properties:
+        id:
+          type: string
+        warehouse_id:
+          type: string
+        status:
+          type: string
+          enum:
+          - queued
+          - processing
+          - completed
+          - failed
+          - cancelled
+        prompt:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+        estimated_completion:
+          type: string
+          format: date-time
+        url:
+          type: string
+        stream_url:
+          type: string
+        summary:
+          type: object
+          properties:
+            total_queries:
+              type: integer
+            total_insights:
+              type: integer
+            key_findings:
+              type: array
+              items:
+                type: string
+        metadata:
+          type: object
   responses:
-    Unauthorized:
-      description: Missing or invalid API key.
+    BadRequest:
+      description: Invalid request.
       content:
         application/json:
           schema:
@@ -444,14 +444,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Invalid request.
+    NotFound:
+      description: Resource not found.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found.
+    Unauthorized:
+      description: Missing or invalid API key.
       content:
         application/json:
           schema:

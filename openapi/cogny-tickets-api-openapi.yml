@@ -326,15 +326,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    Pagination:
-      type: object
-      properties:
-        has_more:
-          type: boolean
-        next_cursor:
-          type: string
-        total_count:
-          type: integer
     Error:
       type: object
       properties:
@@ -351,6 +342,15 @@ components:
               type: string
             details:
               type: object
+    Pagination:
+      type: object
+      properties:
+        has_more:
+          type: boolean
+        next_cursor:
+          type: string
+        total_count:
+          type: integer
     Ticket:
       type: object
       properties:
@@ -385,8 +385,8 @@ components:
         url:
           type: string
   responses:
-    Unauthorized:
-      description: Missing or invalid API key.
+    BadRequest:
+      description: Invalid request.
       content:
         application/json:
           schema:
@@ -397,14 +397,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Invalid request.
+    NotFound:
+      description: Resource not found.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found.
+    Unauthorized:
+      description: Missing or invalid API key.
       content:
         application/json:
           schema:
